@@ -1,39 +1,25 @@
-<<<<<<<< HEAD:pump/omnipod/common/src/main/kotlin/app/aaps/pump/omnipod/common/bledriver/comm/ServiceDiscoverer.kt
-package app.aaps.pump.omnipod.common.bledriver.comm
-========
 package app.aaps.pump.omnipod.common.bledriver.comm.legacy.session
->>>>>>>> 3.4.2.1:pump/omnipod/common/src/main/kotlin/app/aaps/pump/omnipod/common/bledriver/comm/legacy/session/ServiceDiscoverer.kt
-
+import app.aaps.pump.omnipod.common.bledriver.comm.interfaces.session.BleConnection
+import app.aaps.pump.omnipod.common.bledriver.comm.session.ConnectionState
+import app.aaps.pump.omnipod.common.bledriver.comm.session.Connected
 import android.bluetooth.BluetoothGatt
 import android.bluetooth.BluetoothGattCharacteristic
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-<<<<<<<< HEAD:pump/omnipod/common/src/main/kotlin/app/aaps/pump/omnipod/common/bledriver/comm/ServiceDiscoverer.kt
-import app.aaps.pump.omnipod.common.bledriver.comm.callbacks.BleCommCallbacks
-import app.aaps.pump.omnipod.common.bledriver.comm.exceptions.ConnectException
-import app.aaps.pump.omnipod.common.bledriver.comm.io.CharacteristicType
-import app.aaps.pump.omnipod.common.bledriver.comm.session.Connected
-import app.aaps.pump.omnipod.common.bledriver.comm.session.Connection
-import app.aaps.pump.omnipod.common.bledriver.comm.session.Connection.Companion.STOP_CONNECTING_CHECK_INTERVAL_MS
-========
+import app.aaps.pump.omnipod.common.bledriver.comm.legacy.callbacks.BleCommCallbacks
 import app.aaps.pump.omnipod.common.bledriver.comm.exceptions.ConnectException
 import app.aaps.pump.omnipod.common.bledriver.comm.interfaces.io.CharacteristicType
-import app.aaps.pump.omnipod.common.bledriver.comm.interfaces.session.BleConnection
+import app.aaps.pump.omnipod.common.bledriver.comm.legacy.session.Connection
 import app.aaps.pump.omnipod.common.bledriver.comm.session.STOP_CONNECTING_CHECK_INTERVAL_MS
-import app.aaps.pump.omnipod.common.bledriver.comm.legacy.callbacks.BleCommCallbacks
-import app.aaps.pump.omnipod.common.bledriver.comm.session.Connected
->>>>>>>> 3.4.2.1:pump/omnipod/common/src/main/kotlin/app/aaps/pump/omnipod/common/bledriver/comm/legacy/session/ServiceDiscoverer.kt
 import app.aaps.pump.omnipod.common.bledriver.comm.session.ConnectionWaitCondition
 import java.math.BigInteger
 import java.util.UUID
-
 class ServiceDiscoverer(
     private val logger: AAPSLogger,
     private val gatt: BluetoothGatt,
     private val bleCallbacks: BleCommCallbacks,
     private val connection: BleConnection
 ) {
-
     /**
      * This is first step after connection establishment
      */
@@ -75,12 +61,10 @@ class ServiceDiscoverer(
             CharacteristicType.DATA to dataChar
         )
     }
-
     private fun String.toUuid(): UUID = UUID(
         BigInteger(replace("-", "").substring(0, 16), 16).toLong(),
         BigInteger(replace("-", "").substring(16), 16).toLong()
     )
-
     companion object {
         private const val SERVICE_UUID = "1a7e-4024-e3ed-4464-8b7e-751e03d0dc5f"
     }

@@ -1,8 +1,4 @@
-<<<<<<<< HEAD:pump/omnipod/common/src/main/kotlin/app/aaps/pump/omnipod/common/bledriver/comm/io/CharacteristicType.kt
-package app.aaps.pump.omnipod.common.bledriver.comm.io
-========
 package app.aaps.pump.omnipod.common.bledriver.comm.interfaces.io
->>>>>>>> 3.4.2.1:pump/omnipod/common/src/main/kotlin/app/aaps/pump/omnipod/common/bledriver/comm/interfaces/io/CharacteristicType.kt
 
 import java.math.BigInteger
 import java.util.*

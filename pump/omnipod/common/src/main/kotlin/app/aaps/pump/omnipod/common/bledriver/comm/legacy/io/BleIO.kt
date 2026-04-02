@@ -1,10 +1,11 @@
 @file:Suppress("WildcardImport")
 
-<<<<<<<< HEAD:pump/omnipod/common/src/main/kotlin/app/aaps/pump/omnipod/common/bledriver/comm/io/BleIO.kt
-package app.aaps.pump.omnipod.common.bledriver.comm.io
-========
 package app.aaps.pump.omnipod.common.bledriver.comm.legacy.io
->>>>>>>> 3.4.2.1:pump/omnipod/common/src/main/kotlin/app/aaps/pump/omnipod/common/bledriver/comm/legacy/io/BleIO.kt
+
+import android.bluetooth.BluetoothGatt
+
+import android.bluetooth.BluetoothGattCharacteristic
+import android.bluetooth.BluetoothGattDescriptor
 
 import app.aaps.pump.omnipod.common.bledriver.comm.exceptions.ConnectException
 import app.aaps.pump.omnipod.common.bledriver.comm.interfaces.io.BleCharacteristicIO
@@ -19,18 +20,7 @@ import app.aaps.pump.omnipod.common.bledriver.comm.legacy.callbacks.WriteConfirm
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.utils.toHex
-<<<<<<<< HEAD:pump/omnipod/common/src/main/kotlin/app/aaps/pump/omnipod/common/bledriver/comm/io/BleIO.kt
-import app.aaps.pump.omnipod.common.bledriver.comm.callbacks.BleCommCallbacks
-import app.aaps.pump.omnipod.common.bledriver.comm.callbacks.WriteConfirmationError
-import app.aaps.pump.omnipod.common.bledriver.comm.callbacks.WriteConfirmationSuccess
 import app.aaps.pump.omnipod.common.bledriver.comm.command.BleCommandRTS
-import app.aaps.pump.omnipod.common.bledriver.comm.exceptions.ConnectException
-========
-import app.aaps.pump.omnipod.common.bledriver.comm.command.BleCommandRTS
-import android.bluetooth.BluetoothGatt
-import android.bluetooth.BluetoothGattCharacteristic
-import android.bluetooth.BluetoothGattDescriptor
->>>>>>>> 3.4.2.1:pump/omnipod/common/src/main/kotlin/app/aaps/pump/omnipod/common/bledriver/comm/legacy/io/BleIO.kt
 import java.util.concurrent.BlockingQueue
 import java.util.concurrent.TimeUnit
 

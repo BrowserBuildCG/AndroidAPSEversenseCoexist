@@ -1,11 +1,21 @@
-<<<<<<<< HEAD:pump/omnipod/common/src/main/kotlin/app/aaps/pump/omnipod/common/bledriver/comm/session/Connection.kt
-package app.aaps.pump.omnipod.common.bledriver.comm.session
-========
 package app.aaps.pump.omnipod.common.bledriver.comm.legacy.session
->>>>>>>> 3.4.2.1:pump/omnipod/common/src/main/kotlin/app/aaps/pump/omnipod/common/bledriver/comm/legacy/session/Connection.kt
+
+import app.aaps.pump.omnipod.common.bledriver.comm.interfaces.session.BleConnection
+import app.aaps.pump.omnipod.common.bledriver.comm.session.DisconnectHandler
+import app.aaps.pump.omnipod.common.bledriver.comm.session.ConnectionState
+import app.aaps.pump.omnipod.common.bledriver.comm.session.Connected
+import app.aaps.pump.omnipod.common.bledriver.comm.session.NotConnected
+import app.aaps.pump.omnipod.common.bledriver.comm.session.ConnectionWaitCondition
+import app.aaps.pump.omnipod.common.bledriver.comm.session.STOP_CONNECTING_CHECK_INTERVAL_MS
+import app.aaps.pump.omnipod.common.bledriver.comm.session.Session
+import app.aaps.pump.omnipod.common.bledriver.comm.session.EapSqn
+import app.aaps.pump.omnipod.common.bledriver.comm.session.SessionEstablisher
+import app.aaps.pump.omnipod.common.bledriver.comm.session.SessionKeys
+import app.aaps.pump.omnipod.common.bledriver.comm.session.SessionNegotiationResynchronization
+
+import android.bluetooth.BluetoothGatt
 
 import android.bluetooth.BluetoothDevice
-import android.bluetooth.BluetoothGatt
 import android.bluetooth.BluetoothManager
 import android.bluetooth.BluetoothProfile
 import android.content.Context
@@ -16,40 +26,16 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.utils.toHex
 import app.aaps.pump.omnipod.common.bledriver.comm.Ids
-<<<<<<<< HEAD:pump/omnipod/common/src/main/kotlin/app/aaps/pump/omnipod/common/bledriver/comm/session/Connection.kt
-import app.aaps.pump.omnipod.common.bledriver.comm.ServiceDiscoverer
-import app.aaps.pump.omnipod.common.bledriver.comm.callbacks.BleCommCallbacks
-import app.aaps.pump.omnipod.common.bledriver.comm.endecrypt.EnDecrypt
-import app.aaps.pump.omnipod.common.bledriver.comm.exceptions.ConnectException
-import app.aaps.pump.omnipod.common.bledriver.comm.exceptions.FailedToConnectException
-import app.aaps.pump.omnipod.common.bledriver.comm.io.CharacteristicType
-import app.aaps.pump.omnipod.common.bledriver.comm.io.CmdBleIO
-import app.aaps.pump.omnipod.common.bledriver.comm.io.DataBleIO
-import app.aaps.pump.omnipod.common.bledriver.comm.io.IncomingPackets
-import app.aaps.pump.omnipod.common.bledriver.comm.message.MessageIO
-========
+import app.aaps.pump.omnipod.common.bledriver.comm.legacy.session.ServiceDiscoverer
+import app.aaps.pump.omnipod.common.bledriver.comm.legacy.callbacks.BleCommCallbacks
 import app.aaps.pump.omnipod.common.bledriver.comm.endecrypt.EnDecrypt
 import app.aaps.pump.omnipod.common.bledriver.comm.exceptions.ConnectException
 import app.aaps.pump.omnipod.common.bledriver.comm.exceptions.FailedToConnectException
 import app.aaps.pump.omnipod.common.bledriver.comm.interfaces.io.CharacteristicType
-import app.aaps.pump.omnipod.common.bledriver.comm.interfaces.session.BleConnection
-import app.aaps.pump.omnipod.common.bledriver.comm.legacy.callbacks.BleCommCallbacks
 import app.aaps.pump.omnipod.common.bledriver.comm.legacy.io.CmdBleIO
 import app.aaps.pump.omnipod.common.bledriver.comm.legacy.io.DataBleIO
 import app.aaps.pump.omnipod.common.bledriver.comm.legacy.io.IncomingPackets
 import app.aaps.pump.omnipod.common.bledriver.comm.message.MessageIO
-import app.aaps.pump.omnipod.common.bledriver.comm.session.STOP_CONNECTING_CHECK_INTERVAL_MS
-import app.aaps.pump.omnipod.common.bledriver.comm.session.ConnectionState
-import app.aaps.pump.omnipod.common.bledriver.comm.session.ConnectionWaitCondition
-import app.aaps.pump.omnipod.common.bledriver.comm.session.Connected
-import app.aaps.pump.omnipod.common.bledriver.comm.session.DisconnectHandler
-import app.aaps.pump.omnipod.common.bledriver.comm.session.EapSqn
-import app.aaps.pump.omnipod.common.bledriver.comm.session.NotConnected
-import app.aaps.pump.omnipod.common.bledriver.comm.session.Session
-import app.aaps.pump.omnipod.common.bledriver.comm.session.SessionEstablisher
-import app.aaps.pump.omnipod.common.bledriver.comm.session.SessionKeys
-import app.aaps.pump.omnipod.common.bledriver.comm.session.SessionNegotiationResynchronization
->>>>>>>> 3.4.2.1:pump/omnipod/common/src/main/kotlin/app/aaps/pump/omnipod/common/bledriver/comm/legacy/session/Connection.kt
 import app.aaps.pump.omnipod.common.bledriver.pod.state.OmnipodDashPodStateManager
 import java.util.concurrent.CountDownLatch
 

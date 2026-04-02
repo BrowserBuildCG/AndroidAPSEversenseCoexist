@@ -1,8 +1,4 @@
-<<<<<<<< HEAD:pump/omnipod/common/src/main/kotlin/app/aaps/pump/omnipod/common/bledriver/comm/scan/BleDiscoveredDevice.kt
-package app.aaps.pump.omnipod.common.bledriver.comm.scan
-========
 package app.aaps.pump.omnipod.common.bledriver.comm.legacy.scan
->>>>>>>> 3.4.2.1:pump/omnipod/common/src/main/kotlin/app/aaps/pump/omnipod/common/bledriver/comm/legacy/scan/BleDiscoveredDevice.kt
 
 import android.bluetooth.le.ScanRecord
 import android.bluetooth.le.ScanResult

@@ -725,6 +725,19 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
         return PodState()
     }
 
+
+    override var lastBasalCorrectionTime: Long?
+        get() = podState.lastBasalCorrectionTime
+        set(value) { podState.lastBasalCorrectionTime = value; store() }
+
+    override var basalCorrectionInProgress: Boolean
+        get() = podState.basalCorrectionInProgress
+        set(value) { podState.basalCorrectionInProgress = value }
+
+    override fun needsBasalCorrection(): Boolean = podState.lastBasalCorrectionTime?.let {
+        System.currentTimeMillis() - it > 5 * 60 * 1000
+    } ?: true
+
     data class PodState(
         var activationProgress: ActivationProgress = ActivationProgress.NOT_STARTED,
         var lastUpdatedSystem: Long = 0,
@@ -776,6 +789,8 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
         var basalProgram: BasalProgram? = null,
         var tempBasal: OmnipodDashPodStateManager.TempBasal? = null,
         var activeCommand: OmnipodDashPodStateManager.ActiveCommand? = null,
-        var lastBolus: OmnipodDashPodStateManager.LastBolus? = null
+        var lastBolus: OmnipodDashPodStateManager.LastBolus? = null,
+        var lastBasalCorrectionTime: Long? = null,
+        var basalCorrectionInProgress: Boolean = false,
     ) : Serializable
 }

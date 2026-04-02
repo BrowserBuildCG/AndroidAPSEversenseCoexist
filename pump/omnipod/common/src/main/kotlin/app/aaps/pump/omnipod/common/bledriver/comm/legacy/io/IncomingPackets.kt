@@ -1,8 +1,4 @@
-<<<<<<<< HEAD:pump/omnipod/common/src/main/kotlin/app/aaps/pump/omnipod/common/bledriver/comm/io/IncomingPackets.kt
-package app.aaps.pump.omnipod.common.bledriver.comm.io
-========
 package app.aaps.pump.omnipod.common.bledriver.comm.legacy.io
->>>>>>>> 3.4.2.1:pump/omnipod/common/src/main/kotlin/app/aaps/pump/omnipod/common/bledriver/comm/legacy/io/IncomingPackets.kt
 
 import app.aaps.pump.omnipod.common.bledriver.comm.interfaces.io.CharacteristicType
 import java.util.concurrent.BlockingQueue

@@ -1,5 +1,7 @@
 package app.aaps.pump.omnipod.common.bledriver.comm.legacy
 
+import android.bluetooth.BluetoothDevice
+
 import android.Manifest
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothManager

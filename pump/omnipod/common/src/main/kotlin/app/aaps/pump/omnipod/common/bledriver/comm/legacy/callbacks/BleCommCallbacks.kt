@@ -1,10 +1,7 @@
-<<<<<<<< HEAD:pump/omnipod/common/src/main/kotlin/app/aaps/pump/omnipod/common/bledriver/comm/callbacks/BleCommCallbacks.kt
-package app.aaps.pump.omnipod.common.bledriver.comm.callbacks
-========
 package app.aaps.pump.omnipod.common.bledriver.comm.legacy.callbacks
->>>>>>>> 3.4.2.1:pump/omnipod/common/src/main/kotlin/app/aaps/pump/omnipod/common/bledriver/comm/legacy/callbacks/BleCommCallbacks.kt
 
 import android.bluetooth.BluetoothGatt
+
 import android.bluetooth.BluetoothGattCallback
 import android.bluetooth.BluetoothGattCharacteristic
 import android.bluetooth.BluetoothGattDescriptor
@@ -12,13 +9,8 @@ import android.bluetooth.BluetoothProfile
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.utils.toHex
-<<<<<<<< HEAD:pump/omnipod/common/src/main/kotlin/app/aaps/pump/omnipod/common/bledriver/comm/callbacks/BleCommCallbacks.kt
-import app.aaps.pump.omnipod.common.bledriver.comm.io.CharacteristicType.Companion.byValue
-import app.aaps.pump.omnipod.common.bledriver.comm.io.IncomingPackets
-========
 import app.aaps.pump.omnipod.common.bledriver.comm.interfaces.io.CharacteristicType.Companion.byValue
 import app.aaps.pump.omnipod.common.bledriver.comm.legacy.io.IncomingPackets
->>>>>>>> 3.4.2.1:pump/omnipod/common/src/main/kotlin/app/aaps/pump/omnipod/common/bledriver/comm/legacy/callbacks/BleCommCallbacks.kt
 import app.aaps.pump.omnipod.common.bledriver.comm.session.DisconnectHandler
 import java.util.UUID
 import java.util.concurrent.BlockingQueue

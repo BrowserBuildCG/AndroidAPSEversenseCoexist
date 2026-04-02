@@ -1,8 +1,4 @@
-<<<<<<<< HEAD:pump/omnipod/common/src/main/kotlin/app/aaps/pump/omnipod/common/bledriver/comm/scan/PodScanner.kt
-package app.aaps.pump.omnipod.common.bledriver.comm.scan
-========
 package app.aaps.pump.omnipod.common.bledriver.comm.legacy.scan
->>>>>>>> 3.4.2.1:pump/omnipod/common/src/main/kotlin/app/aaps/pump/omnipod/common/bledriver/comm/legacy/scan/PodScanner.kt
 
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.le.ScanFilter
@@ -12,13 +8,9 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.pump.omnipod.common.bledriver.comm.exceptions.ScanException
 import app.aaps.pump.omnipod.common.bledriver.comm.exceptions.ScanFailFoundTooManyException
-<<<<<<<< HEAD:pump/omnipod/common/src/main/kotlin/app/aaps/pump/omnipod/common/bledriver/comm/scan/PodScanner.kt
-========
-import app.aaps.pump.omnipod.common.bledriver.comm.interfaces.scan.PodScanner as PodScannerInterface
->>>>>>>> 3.4.2.1:pump/omnipod/common/src/main/kotlin/app/aaps/pump/omnipod/common/bledriver/comm/legacy/scan/PodScanner.kt
 import java.util.Arrays
 
-class PodScanner(private val logger: AAPSLogger, private val bluetoothAdapter: BluetoothAdapter) : PodScannerInterface {
+class PodScanner(private val logger: AAPSLogger, private val bluetoothAdapter: BluetoothAdapter) : app.aaps.pump.omnipod.common.bledriver.comm.interfaces.scan.PodScanner {
 
     @Throws(InterruptedException::class, ScanException::class)
     override fun scanForPod(serviceUUID: String?, podID: Long): app.aaps.pump.omnipod.common.bledriver.comm.interfaces.scan.BleDiscoveredDevice {
@@ -47,8 +39,8 @@ class PodScanner(private val logger: AAPSLogger, private val bluetoothAdapter: B
     }
 
     companion object {
-        const val SCAN_FOR_SERVICE_UUID = PodScannerInterface.SCAN_FOR_SERVICE_UUID
-        const val POD_ID_NOT_ACTIVATED = PodScannerInterface.POD_ID_NOT_ACTIVATED
+        const val SCAN_FOR_SERVICE_UUID = app.aaps.pump.omnipod.common.bledriver.comm.interfaces.scan.PodScanner.SCAN_FOR_SERVICE_UUID
+        const val POD_ID_NOT_ACTIVATED = app.aaps.pump.omnipod.common.bledriver.comm.interfaces.scan.PodScanner.POD_ID_NOT_ACTIVATED
         private const val SCAN_DURATION_MS = 5000
     }
 }
