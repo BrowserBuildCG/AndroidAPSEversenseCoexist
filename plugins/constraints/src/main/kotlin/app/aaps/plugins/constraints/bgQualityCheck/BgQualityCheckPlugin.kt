@@ -9,6 +9,7 @@ import app.aaps.core.interfaces.constraints.PluginConstraints
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.resources.ResourceHelper
@@ -35,7 +36,8 @@ class BgQualityCheckPlugin @Inject constructor(
     private val aapsSchedulers:
     AapsSchedulers,
     private val fabricPrivacy: FabricPrivacy,
-    private val dateUtil: DateUtil
+    private val dateUtil: DateUtil,
+    private val activePlugin: ActivePlugin
 ) : PluginBase(
     PluginDescription()
         .mainType(PluginType.CONSTRAINTS)
@@ -67,7 +69,7 @@ class BgQualityCheckPlugin @Inject constructor(
     // Fallback to LGS if BG values are doubled
     override fun applyMaxIOBConstraints(maxIob: Constraint<Double>): Constraint<Double> =
         if (state == BgQualityCheck.State.DOUBLED)
-            maxIob.set(0.0, "Doubled values in BGSource", this)
+            maxIob.set(0.0, "Limiting max IOB to 0 U due to doubled values in BG Source", this)
         else
             maxIob
 
@@ -90,8 +92,15 @@ class BgQualityCheckPlugin @Inject constructor(
             state = BgQualityCheck.State.FIVE_MIN_DATA
             message = "Data is clean"
         } else if (iobCobCalculator.ads.lastUsed5minCalculation == false) {
-            state = BgQualityCheck.State.RECALCULATED
-            message = rh.gs(R.string.recalculated_data_used)
+            // Skip RECALCULATED warning for CGM sources that support advanced filtering
+            // (e.g. Eversense) since they use their own transmission interval
+            if (activePlugin.activeBgSource.advancedFilteringSupported()) {
+                state = BgQualityCheck.State.FIVE_MIN_DATA
+                message = "Data is clean"
+            } else {
+                state = BgQualityCheck.State.RECALCULATED
+                message = rh.gs(R.string.recalculated_data_used)
+            }
         } else {
             state = BgQualityCheck.State.UNKNOWN
             message = ""
