@@ -421,6 +421,8 @@ class EversensePlugin @Inject constructor(
             addPreference(lastSync)
             lastSyncPreference = lastSync
 
+            if (false) {
+
             val releaseForApp = Preference(context)
             releaseForApp.key = "eversense_release_for_official_app"
             releaseForApp.title = rh.gs(R.string.eversense_release_for_official_app)
@@ -437,10 +439,13 @@ class EversensePlugin @Inject constructor(
             }
             addPreference(releaseForApp)
             releasePreference = releaseForApp
+            }
         }
     }
 
     private fun startOfficialAppReleaseReconnectLoop() {
+
+        if (false) return
         if (!releaseForOfficialApp) return
         aapsLogger.info(LTag.BGSOURCE, "Release mode — attempting reconnect")
         ioScope.launch {
@@ -614,3 +619,4 @@ class EversensePlugin @Inject constructor(
         private val eversense get() = EversenseCGMPlugin.instance
     }
 }
+
