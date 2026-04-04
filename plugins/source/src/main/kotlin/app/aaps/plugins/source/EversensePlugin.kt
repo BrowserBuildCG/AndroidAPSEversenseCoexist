@@ -604,11 +604,11 @@ class EversensePlugin @Inject constructor(
                     .setNegativeButton(rh.gs(R.string.eversense_scan_cancel), null)
                     .show()
             }
-        }, 3000)
+        }, 10000)
 
         dialog = AlertDialog.Builder(context)
             .setTitle(rh.gs(R.string.eversense_scan_title))
-            .setMessage("Scanning for Eversense devices...")
+            .setMessage("Scanning for Eversense devices (10 seconds)...")
             .setNegativeButton(rh.gs(R.string.eversense_scan_cancel)) { _, _ ->
                 isCancelled = true
                 eversense.stopScan()

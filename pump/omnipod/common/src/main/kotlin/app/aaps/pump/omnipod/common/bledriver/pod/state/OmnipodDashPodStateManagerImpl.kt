@@ -813,9 +813,11 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
         }
 
         // Update basal expected delivery
+        val maxLookback = 60 * 60 * 1000L // 1 hour cap to prevent integration over huge periods (e.g. fresh install)
+        val clampedStartTime = if (podState.lastUpdatedSystem == 0L) now else maxOf(podState.lastUpdatedSystem, now - maxLookback)
         podState.basalExpected = podState.basalExpected?.let {
             integrateExpectedDelivery(
-                startTime = podState.lastUpdatedSystem,
+                startTime = clampedStartTime,
                 endTime = now,
                 timeZoneOffset = podState.timeZoneOffset,
                 tempBasal = tempBasal,
@@ -1063,3 +1065,4 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
         @Transient var basalCorrectionInProgress: Boolean = false  // Transient flag: true while basal correction is delivering
     ) : Serializable
 }
+
