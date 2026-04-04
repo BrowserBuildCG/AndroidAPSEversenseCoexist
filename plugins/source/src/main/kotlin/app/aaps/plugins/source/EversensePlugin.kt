@@ -314,6 +314,8 @@ class EversensePlugin @Inject constructor(
             calibrationAction.title = rh.gs(R.string.eversense_calibration_action)
             calibrationAction.summary = when {
                 state == null -> notConnected
+                state.calibrationReadiness == CalibrationReadiness.TOO_SOON ->
+                    "⏳ " + rh.gs(R.string.eversense_calibration_too_soon)
                 state.calibrationReadiness != CalibrationReadiness.READY -> state.calibrationReadiness.name
                 else -> ""
             }
@@ -414,7 +416,7 @@ class EversensePlugin @Inject constructor(
                     return@OnPreferenceClickListener false
                 }
                 ioScope.launch {
-                    eversense.triggerFullSync()
+                    eversense.triggerFullSync(force = true)
                 }
                 return@OnPreferenceClickListener true
             }
@@ -619,4 +621,5 @@ class EversensePlugin @Inject constructor(
         private val eversense get() = EversenseCGMPlugin.instance
     }
 }
+
 
