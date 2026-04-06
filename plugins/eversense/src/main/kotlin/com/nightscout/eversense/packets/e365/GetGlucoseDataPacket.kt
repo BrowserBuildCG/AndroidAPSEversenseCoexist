@@ -56,12 +56,13 @@ class GetGlucoseDataPacket(private val sensorIdLen: Int) : EversenseBasePacket()
 
     private fun getTrend(value: Int): EversenseTrendArrow {
         return when (value) {
-            0  -> EversenseTrendArrow.FLAT
             1  -> EversenseTrendArrow.SINGLE_DOWN
             2  -> EversenseTrendArrow.FORTY_FIVE_DOWN
             4  -> EversenseTrendArrow.FLAT
             8  -> EversenseTrendArrow.FORTY_FIVE_UP
             16 -> EversenseTrendArrow.SINGLE_UP
+            32 -> EversenseTrendArrow.SINGLE_DOWN
+            64 -> EversenseTrendArrow.SINGLE_UP
             else -> EversenseTrendArrow.NONE
         }
     }

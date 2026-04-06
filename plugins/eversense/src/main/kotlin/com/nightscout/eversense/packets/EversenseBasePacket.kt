@@ -67,7 +67,7 @@ abstract class EversenseBasePacket : Object() {
 
     private fun encodeMessage(data: ByteArray = getRequestData(), chunkSize: Int = 20): ByteArray {
         val adjustedChunkSize = chunkSize - 2
-        val totalChunks = (data.size / adjustedChunkSize) + 1
+        val totalChunks = (data.size + adjustedChunkSize - 1) / adjustedChunkSize
 
         // Calculate total size needed for the result array
         val totalHeaderSize = 3 + 2 * (totalChunks - 1)
