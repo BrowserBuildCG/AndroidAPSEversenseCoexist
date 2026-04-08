@@ -91,7 +91,8 @@ class EversensePlugin @Inject constructor(
     private var lastCalibrationPreference: Preference? = null
     private var nextCalibrationPreference: Preference? = null
     private var calibrationActionPreference: Preference? = null
-    private var lastNotifiedFirmwareVersion: String = ""
+    private val lastNotifiedFirmwareVersion: String get() = securePrefs.getString("last_notified_firmware_version", "") ?: ""
+    private fun setLastNotifiedFirmwareVersion(version: String) = securePrefs.edit(commit = true) { putString("last_notified_firmware_version", version) }
     private var consecutiveNoSignalReadings: Int = 0
     private val NO_SIGNAL_WARNING_THRESHOLD = 3
     private var releaseForOfficialApp: Boolean = false
@@ -495,7 +496,7 @@ class EversensePlugin @Inject constructor(
 
         // Show firmware notification only once per unique firmware version
         if (state.firmwareVersion.isNotEmpty() && state.firmwareVersion != lastNotifiedFirmwareVersion) {
-            lastNotifiedFirmwareVersion = state.firmwareVersion
+            setLastNotifiedFirmwareVersion(state.firmwareVersion)
             aapsLogger.info(LTag.BGSOURCE, "Transmitter firmware: ${state.firmwareVersion}")
             rxBus.send(EventNewNotification(
                 Notification(96, "Eversense firmware: ${state.firmwareVersion} — open the official Eversense app to check for updates", Notification.INFO, 1440)
