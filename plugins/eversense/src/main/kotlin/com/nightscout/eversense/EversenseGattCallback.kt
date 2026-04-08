@@ -1,4 +1,4 @@
-﻿package com.nightscout.eversense
+package com.nightscout.eversense
 
 import android.annotation.SuppressLint
 import android.bluetooth.BluetoothGatt
@@ -397,6 +397,7 @@ class EversenseGattCallback(
 
             if (EversenseE3Packets.isErrorPacket(data[0])) {
                 EversenseLogger.error(TAG, "Received error response - data: ${data.toHexString()}")
+                packet.isErrorResponse = true
                 packet.notifyAll()
                 return
             }
@@ -452,6 +453,9 @@ class EversenseGattCallback(
                 packet.wait(WRITE_TIMEOUT_MS)
                 val elapsed = System.currentTimeMillis() - start
                 if (elapsed >= WRITE_TIMEOUT_MS) {
+                } else if (packet.isErrorResponse) {
+                    currentPacket.set(null)
+                    throw EversenseWriteException("Transmitter returned error response — packet: ${packet.getAnnotation()?.responseId}")
                     currentPacket.set(null)
                     throw EversenseWriteException("Timed out waiting for response after ${WRITE_TIMEOUT_MS}ms — packet: ${packet.getAnnotation()?.responseId}")
                 }

@@ -13,6 +13,7 @@ abstract class EversenseBasePacket : Object() {
     abstract fun parseResponse(): Response?
 
     protected var receivedData = UByteArray(0)
+    @Volatile var isErrorResponse: Boolean = false
 
     fun getAnnotation(): EversensePacket? {
         return this.javaClass.annotations.find { it.annotationClass == EversensePacket::class } as? EversensePacket
