@@ -29,7 +29,7 @@ class SendCalibrationPacket(private val glucoseMgDl: Int) : EversenseBasePacket(
         val now = System.currentTimeMillis()
 
         // BG value is sent as mg/dL * 10 to preserve one decimal place
-        val bgEncoded = EversenseE3Writer.writeInt16(glucoseMgDl * 10)
+        val bgEncoded = EversenseE3Writer.writeInt16(glucoseMgDl)
         val date = EversenseE3Writer.writeDate(now)
         val time = EversenseE3Writer.writeTime(now)
 
