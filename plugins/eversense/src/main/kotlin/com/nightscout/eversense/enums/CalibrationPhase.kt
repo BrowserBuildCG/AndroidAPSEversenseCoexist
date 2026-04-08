@@ -31,8 +31,8 @@ enum class CalibrationPhase(private val value: Int) {
         fun fromE3(value: Int): CalibrationPhase {
             return when(value) {
                 1 -> WARMING_UP
-                2 -> DAILY_CALIBRATION
-                3 -> INITIALIZATION
+                2 -> INITIALIZATION
+                3 -> DAILY_CALIBRATION
                 4 -> SUSPICIOUS
                 5 -> UNKNOWN
                 6 -> DEBUG
