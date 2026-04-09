@@ -9,14 +9,14 @@ import com.nightscout.eversense.packets.e365.utils.toUnixArray
 /**
  * Sends a blood glucose calibration point using Unix2000 timestamps.
  * Accepts a specific sample timestamp plus the current time, matching the
- * iOS SendBloodGlucoseDataCommandId protocol format.
+ * iOS SendBloodGlucoseDataWithTwoTimestamps protocol format.
  *
  * @param glucoseInMgDl Blood glucose value in mg/dL
  * @param sampleTimestamp Epoch milliseconds of the blood glucose sample
  */
 @EversensePacket(
-    requestId = EversenseE3Packets.SendBloodGlucoseDataCommandId,
-    responseId = EversenseE3Packets.SendBloodGlucoseDataResponseId,
+    requestId = EversenseE3Packets.SendBloodGlucoseDataWithTwoTimestampsCommandId,
+    responseId = EversenseE3Packets.SendBloodGlucoseDataWithTwoTimestampsResponseId,
     typeId = 0,
     securityType = EversenseSecurityType.None
 )
