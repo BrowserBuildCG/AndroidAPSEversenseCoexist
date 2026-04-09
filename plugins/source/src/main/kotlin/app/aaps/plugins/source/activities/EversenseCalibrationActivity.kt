@@ -29,7 +29,7 @@ class EversenseCalibrationActivity : TranslatedDaggerAppCompatActivity() {
 
     companion object {
         private const val TAG = "EversenseCalibration"
-        private const val RECONNECT_TIMEOUT_MS = 15000L
+        private const val RECONNECT_TIMEOUT_MS = 30000L
     }
 
     private val mainHandler = Handler(Looper.getMainLooper())
@@ -98,16 +98,17 @@ class EversenseCalibrationActivity : TranslatedDaggerAppCompatActivity() {
         var reconnected = false
 
         val watcher = object : EversenseWatcher {
-            override fun onConnectionChanged(connected: Boolean) {
-                if (connected && !reconnected) {
+            override fun onTransmitterReady() {
+                if (!reconnected) {
                     reconnected = true
-                    EversenseLogger.info(TAG, "Reconnected — proceeding with calibration")
+                    EversenseLogger.info(TAG, "Transmitter ready after full sync — proceeding with calibration")
                     mainHandler.post {
                         statusText.text = getString(R.string.eversense_calibration_sending)
                     }
                     sendCalibration(bgMgDl, submitButton, statusText)
                 }
             }
+            override fun onConnectionChanged(connected: Boolean) {}
             override fun onStateChanged(state: EversenseState) {}
             override fun onCGMRead(type: EversenseType, readings: List<EversenseCGMResult>) {}
             override fun onAlarmReceived(alarm: ActiveAlarm) {}
@@ -121,7 +122,7 @@ class EversenseCalibrationActivity : TranslatedDaggerAppCompatActivity() {
         // Timeout — if not reconnected within 15 seconds, give up
         mainHandler.postDelayed({
             if (!reconnected) {
-                EversenseLogger.warning(TAG, "Reconnect timed out — calibration aborted")
+                EversenseLogger.warning(TAG, "Transmitter ready timed out after ${RECONNECT_TIMEOUT_MS/1000}s — calibration aborted")
                 EversenseCGMPlugin.instance.removeWatcher(watcher)
                 connectionWatcher = null
                 mainHandler.post {

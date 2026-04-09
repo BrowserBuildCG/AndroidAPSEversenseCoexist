@@ -505,6 +505,8 @@ class EversenseGattCallback(
 
         EversenseLogger.info(TAG, "E3 auth complete — ready for full sync")
         EversenseE3Communicator.fullSync(this, preferences, plugin.watchers)
+        EversenseLogger.info(TAG, "E3 transmitter ready — notifying watchers")
+        handler.post { plugin.watchers.forEach { it.onTransmitterReady() } }
     }
 
     @SuppressLint("MissingPermission")
@@ -570,6 +572,8 @@ class EversenseGattCallback(
 
             EversenseLogger.info(TAG, "365 auth complete — ready for full sync")
             Eversense365Communicator.fullSync(this, preferences, plugin.watchers)
+            EversenseLogger.info(TAG, "365 transmitter ready — notifying watchers")
+            handler.post { plugin.watchers.forEach { it.onTransmitterReady() } }
 
         } catch (exception: Exception) {
             EversenseLogger.error(TAG, "[365] authV2 failed: $exception")
