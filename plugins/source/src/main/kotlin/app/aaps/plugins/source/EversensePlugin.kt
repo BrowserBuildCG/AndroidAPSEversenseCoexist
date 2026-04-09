@@ -96,6 +96,7 @@ class EversensePlugin @Inject constructor(
     private var consecutiveNoSignalReadings: Int = 0
     private val NO_SIGNAL_WARNING_THRESHOLD = 3
     private var releaseForOfficialApp: Boolean = false
+    @Volatile private var placementNotificationSnoozed: Boolean = false
     private var releasePreference: Preference? = null
 
     init {
@@ -486,11 +487,14 @@ class EversensePlugin @Inject constructor(
             consecutiveNoSignalReadings++
             aapsLogger.warn(LTag.BGSOURCE, "No signal reading $consecutiveNoSignalReadings of $NO_SIGNAL_WARNING_THRESHOLD")
             if (consecutiveNoSignalReadings >= NO_SIGNAL_WARNING_THRESHOLD) {
-                onTransmitterNotPlaced()
+                if (!placementNotificationSnoozed) {
+                    onTransmitterNotPlaced()
+                }
                 consecutiveNoSignalReadings = 0
             }
         } else {
             consecutiveNoSignalReadings = 0
+            placementNotificationSnoozed = false
             rxBus.send(EventDismissNotification(98))
         }
 
@@ -510,10 +514,15 @@ class EversensePlugin @Inject constructor(
         mainHandler.post {
             val notification = Notification(98, rh.gs(R.string.eversense_transmitter_not_placed), Notification.URGENT)
             notification.action = Runnable {
+                placementNotificationSnoozed = true
                 rxBus.send(EventDismissNotification(98))
-                val intent = Intent(context, app.aaps.plugins.source.activities.EversensePlacementActivity::class.java)
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                context.startActivity(intent)
+                if (eversense.isConnected()) {
+                    val intent = Intent(context, app.aaps.plugins.source.activities.EversensePlacementActivity::class.java)
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    context.startActivity(intent)
+                } else {
+                    showDeviceSelectionDialog(context)
+                }
             }
             notification.buttonText = app.aaps.core.ui.R.string.ok
             rxBus.send(EventNewNotification(notification))

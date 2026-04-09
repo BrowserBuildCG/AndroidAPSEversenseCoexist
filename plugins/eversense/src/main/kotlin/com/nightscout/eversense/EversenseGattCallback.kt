@@ -169,10 +169,16 @@ class EversenseGattCallback(
             }
 
             if (status == 19) {
-                failedConnectionAttempts++
-                EversenseLogger.warning(TAG, "Connection terminated by transmitter (status 19) — attempt $failedConnectionAttempts")
-                if (failedConnectionAttempts >= PLACEMENT_WARNING_THRESHOLD) {
-                    handler.post { plugin.watchers.forEach { it.onTransmitterNotPlaced() } }
+                // For E3 transmitters, status 19 indicates a placement issue — count consecutive failures.
+                // For 365 transmitters, status 19 is normal post-sync disconnect behaviour — do not count.
+                if (!is365()) {
+                    failedConnectionAttempts++
+                    EversenseLogger.warning(TAG, "Connection terminated by transmitter (status 19) — attempt $failedConnectionAttempts")
+                    if (failedConnectionAttempts >= PLACEMENT_WARNING_THRESHOLD) {
+                        handler.post { plugin.watchers.forEach { it.onTransmitterNotPlaced() } }
+                    }
+                } else {
+                    EversenseLogger.debug(TAG, "365 post-sync disconnect (status 19) — normal behaviour, not a placement failure")
                 }
             } else {
                 failedConnectionAttempts = 0
