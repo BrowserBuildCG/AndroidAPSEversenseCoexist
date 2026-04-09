@@ -373,8 +373,14 @@ class EversensePlugin @Inject constructor(
                     requestBluetoothPermissions()
                     return@OnPreferenceClickListener false
                 }
-                aapsLogger.debug(LTag.BGSOURCE, "User tapped connect — starting BLE scan")
-                showDeviceSelectionDialog(activityContext)
+                val hasStoredDevice = context.getSharedPreferences("EversenseCGMManager", android.content.Context.MODE_PRIVATE).getString("eversense_remote_device", null) != null
+                if (hasStoredDevice) {
+                    aapsLogger.debug(LTag.BGSOURCE, "User tapped connect — reconnecting to stored device")
+                    ioScope.launch { eversense.connect(null) }
+                } else {
+                    aapsLogger.debug(LTag.BGSOURCE, "User tapped connect — no stored device, starting BLE scan")
+                    showDeviceSelectionDialog(activityContext)
+                }
                 return@OnPreferenceClickListener true
             }
             addPreference(connected)
@@ -582,7 +588,8 @@ class EversensePlugin @Inject constructor(
 
         val scanCallback = object : EversenseScanCallback {
             override fun onResult(item: EversenseScanResult) {
-                if (!isCancelled && foundDevices.none { it.name == item.name }) {
+                val isEversenseTransmitter = item.name.matches(Regex("T\\d+.*"))
+                if (!isCancelled && isEversenseTransmitter && foundDevices.none { it.name == item.name }) {
                     foundDevices.add(item)
                     aapsLogger.info(LTag.BGSOURCE, "Scan found device: ${item.name}")
                 }
