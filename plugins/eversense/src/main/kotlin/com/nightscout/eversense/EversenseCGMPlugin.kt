@@ -73,6 +73,7 @@ class EversenseCGMPlugin {
     }
 
     fun isConnected(): Boolean = gattCallback?.isConnected() ?: false
+    fun is365(): Boolean = gattCallback?.is365() ?: false
 
     fun getCurrentState(): EversenseState? {
         val preferences = preferences ?: run {

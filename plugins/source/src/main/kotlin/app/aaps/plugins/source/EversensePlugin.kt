@@ -31,6 +31,7 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.source.BgSource
+import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.interfaces.Preferences
 import com.nightscout.eversense.EversenseCGMPlugin
 import com.nightscout.eversense.callbacks.EversenseScanCallback
@@ -93,6 +94,18 @@ class EversensePlugin @Inject constructor(
     private var calibrationActionPreference: Preference? = null
     private val lastNotifiedFirmwareVersion: String get() = securePrefs.getString("last_notified_firmware_version", "") ?: ""
     private fun setLastNotifiedFirmwareVersion(version: String) = securePrefs.edit(commit = true) { putString("last_notified_firmware_version", version) }
+    private fun isSensorExpiryDismissed(insertionDate: Long, days: Int): Boolean =
+        securePrefs.getBoolean("eversense_expiry_dismissed_${insertionDate}_${days}", false)
+    private fun setSensorExpiryDismissed(insertionDate: Long, days: Int) =
+        securePrefs.edit(commit = true) { putBoolean("eversense_expiry_dismissed_${insertionDate}_${days}", true) }
+    private fun isCalibrationDueDismissed(nextCalibrationDate: Long): Boolean =
+        securePrefs.getBoolean("eversense_cal_due_dismissed_${nextCalibrationDate}", false)
+    private fun setCalibrationDueDismissed(nextCalibrationDate: Long) =
+        securePrefs.edit(commit = true) { putBoolean("eversense_cal_due_dismissed_${nextCalibrationDate}", true) }
+    private fun isBatteryLowDismissed(): Boolean =
+        securePrefs.getBoolean("eversense_battery_low_dismissed", false)
+    private fun setBatteryLowDismissed() =
+        securePrefs.edit(commit = true) { putBoolean("eversense_battery_low_dismissed", true) }
     private var consecutiveNoSignalReadings: Int = 0
     private val NO_SIGNAL_WARNING_THRESHOLD = 3
     private var releaseForOfficialApp: Boolean = false
@@ -488,6 +501,15 @@ class EversensePlugin @Inject constructor(
     override fun onStateChanged(state: EversenseState) {
         aapsLogger.info(LTag.BGSOURCE, "New state received: ${Json.encodeToString(state)}")
 
+        // Sync SAGE color thresholds to match Eversense sensor lifetime and notification days
+        if (state.insertionDate > 0) {
+            val lifetimeDays = if (eversense.is365()) 365 else 180
+            val warnHours  = (lifetimeDays - 30) * 24   // orange when 30 days remaining
+            val urgentHours = (lifetimeDays - 10) * 24  // red when 10 days remaining
+            preferences.put(IntKey.OverviewSageWarning, warnHours)
+            preferences.put(IntKey.OverviewSageCritical, urgentHours)
+        }
+
         // Check for persistent no-signal — indicates transmitter not placed over sensor
         if (state.sensorSignalStrength == 0) {
             consecutiveNoSignalReadings++
@@ -502,6 +524,65 @@ class EversensePlugin @Inject constructor(
             consecutiveNoSignalReadings = 0
             placementNotificationSnoozed = false
             rxBus.send(EventDismissNotification(98))
+        }
+
+        // Show sensor expiry notifications at 60, 30, and 10 days remaining — once each, at noon, keyed to insertionDate
+        if (state.insertionDate > 0) {
+            val sensorLifetimeMs = if (eversense.is365()) 365L * 24 * 60 * 60 * 1000 else 180L * 24 * 60 * 60 * 1000
+            val expiryMs = state.insertionDate + sensorLifetimeMs
+            val daysRemaining = ((expiryMs - System.currentTimeMillis()) / (24 * 60 * 60 * 1000)).toInt()
+            val isAfterNoon = java.util.Calendar.getInstance().get(java.util.Calendar.HOUR_OF_DAY) >= 12
+
+            if (isAfterNoon && daysRemaining in 31..60 && !isSensorExpiryDismissed(state.insertionDate, 60)) {
+                setSensorExpiryDismissed(state.insertionDate, 60)
+                rxBus.send(EventNewNotification(
+                    Notification(99, "Eversense sensor expires in $daysRemaining days — plan your sensor replacement.", Notification.INFO)
+                        .also { n -> n.action = Runnable { rxBus.send(EventDismissNotification(99)) }; n.buttonText = app.aaps.core.ui.R.string.ok }
+                ))
+            } else if (isAfterNoon && daysRemaining in 11..30 && !isSensorExpiryDismissed(state.insertionDate, 30)) {
+                setSensorExpiryDismissed(state.insertionDate, 30)
+                rxBus.send(EventNewNotification(
+                    Notification(100, "Eversense sensor expires in $daysRemaining days — replace your sensor soon.", Notification.NORMAL)
+                        .also { n -> n.action = Runnable { rxBus.send(EventDismissNotification(100)) }; n.buttonText = app.aaps.core.ui.R.string.ok }
+                ))
+            } else if (isAfterNoon && daysRemaining in 1..10 && !isSensorExpiryDismissed(state.insertionDate, daysRemaining)) {
+                setSensorExpiryDismissed(state.insertionDate, daysRemaining)
+                rxBus.send(EventNewNotification(
+                    Notification(101, "Eversense sensor expires in $daysRemaining days — replace your sensor immediately.", Notification.URGENT)
+                        .also { n -> n.action = Runnable { rxBus.send(EventDismissNotification(101)) }; n.buttonText = app.aaps.core.ui.R.string.ok }
+                ))
+            }
+        }
+
+        // Battery low notification — fires once at noon when battery < 11%, dismissed by user, never shown again
+        val isAfterNoonBattery = java.util.Calendar.getInstance().get(java.util.Calendar.HOUR_OF_DAY) >= 12
+        if (isAfterNoonBattery && state.batteryPercentage in 1..10 && !isBatteryLowDismissed()) {
+            rxBus.send(EventNewNotification(
+                Notification(102, "Eversense transmitter battery low: ${state.batteryPercentage}% — please charge your transmitter.", Notification.NORMAL)
+                    .also { n ->
+                        n.action = Runnable {
+                            setBatteryLowDismissed()
+                            rxBus.send(EventDismissNotification(102))
+                        }
+                        n.buttonText = app.aaps.core.ui.R.string.ok
+                    }
+            ))
+        }
+
+        // Calibration due notification — fires once at noon per nextCalibrationDate, dismissed by user, never shown again for that date
+        val isAfterNoonCal = java.util.Calendar.getInstance().get(java.util.Calendar.HOUR_OF_DAY) >= 12
+        if (isAfterNoonCal && state.nextCalibrationDate > 0 && System.currentTimeMillis() >= state.nextCalibrationDate
+            && !isCalibrationDueDismissed(state.nextCalibrationDate)) {
+            rxBus.send(EventNewNotification(
+                Notification(103, "Eversense calibration is due — open AAPS to calibrate your sensor.", Notification.NORMAL)
+                    .also { n ->
+                        n.action = Runnable {
+                            setCalibrationDueDismissed(state.nextCalibrationDate)
+                            rxBus.send(EventDismissNotification(103))
+                        }
+                        n.buttonText = app.aaps.core.ui.R.string.ok
+                    }
+            ))
         }
 
         // Show firmware notification only once per unique firmware version
@@ -571,11 +652,12 @@ class EversensePlugin @Inject constructor(
         }
 
         ioScope.launch {
+            val insertionDate = eversense.getCurrentState()?.insertionDate?.takeIf { it > 0 }
             val result = persistenceLayer.insertCgmSourceData(
                 Sources.Eversense,
                 glucoseValues,
                 listOf(),
-                null
+                insertionDate
             ).blockingGet()
             aapsLogger.info(LTag.BGSOURCE, "CGM insert complete — inserted: ${result.inserted}, updated: ${result.updated}")
         }
