@@ -51,6 +51,7 @@ class EversenseGattCallback(
         private const val magicDescriptorUUID = "00002902-0000-1000-8000-00805f9b34fb"
 
         private const val WRITE_TIMEOUT_MS = 5000L
+        private const val CALIBRATION_TIMEOUT_MS = 15000L
     }
 
     // FIX 1: Dedicated BLE executor for callbacks; separate network executor for HTTP calls
@@ -403,7 +404,7 @@ class EversenseGattCallback(
             }
 
             if (security == EversenseSecurityType.None) {
-                if (packetAnnotation.responseId != data[0]) {
+                if (!packet.skipResponseIdValidation && packetAnnotation.responseId != data[0]) {
                     EversenseLogger.warning(TAG, "Incorrect responseId - expected: ${packetAnnotation.responseId}, got: ${data[0]}")
                     return
                 }
@@ -428,7 +429,7 @@ class EversenseGattCallback(
     @SuppressLint("MissingPermission")
     @OptIn(ExperimentalStdlibApi::class)
     @Throws(EversenseWriteException::class)
-    fun <T : EversenseBasePacket.Response> writePacket(packet: EversenseBasePacket): T {
+    fun <T : EversenseBasePacket.Response> writePacket(packet: EversenseBasePacket, timeoutMs: Long = WRITE_TIMEOUT_MS): T {
         val gatt = bluetoothGatt ?: throw EversenseWriteException("Gatt is null — not connected")
 
         val requestCharacteristic = requestCharacteristic
@@ -450,14 +451,14 @@ class EversenseGattCallback(
                 // Previously, a timeout would fall through to parseResponse() silently, likely
                 // producing a confusing cast exception rather than a clear timeout error.
                 val start = System.currentTimeMillis()
-                packet.wait(WRITE_TIMEOUT_MS)
+                packet.wait(timeoutMs)
                 val elapsed = System.currentTimeMillis() - start
-                if (elapsed >= WRITE_TIMEOUT_MS) {
+                if (elapsed >= timeoutMs) {
                 } else if (packet.isErrorResponse) {
                     currentPacket.set(null)
                     throw EversenseWriteException("Transmitter returned error response — packet: ${packet.getAnnotation()?.responseId}")
                     currentPacket.set(null)
-                    throw EversenseWriteException("Timed out waiting for response after ${WRITE_TIMEOUT_MS}ms — packet: ${packet.getAnnotation()?.responseId}")
+                    throw EversenseWriteException("Timed out waiting for response after ${timeoutMs}ms — packet: ${packet.getAnnotation()?.responseId}")
                 }
             } catch (e: EversenseWriteException) {
                 throw e

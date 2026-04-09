@@ -293,7 +293,7 @@ class EversenseE3Communicator {
         fun sendCalibration(gatt: EversenseGattCallback, glucoseMgDl: Int) {
             EversenseLogger.info(TAG, "Sending calibration value: $glucoseMgDl mg/dL")
             val now = System.currentTimeMillis()
-            gatt.writePacket<SetBloodGlucosePointPacket.Response>(SetBloodGlucosePointPacket(glucoseMgDl, now))
+            gatt.writePacket<SetBloodGlucosePointPacket.Response>(SetBloodGlucosePointPacket(glucoseMgDl, now), 15000L)
             EversenseLogger.info(TAG, "Calibration sent successfully")
         }
     }

@@ -14,6 +14,7 @@ abstract class EversenseBasePacket : Object() {
 
     protected var receivedData = UByteArray(0)
     @Volatile var isErrorResponse: Boolean = false
+    open val skipResponseIdValidation: Boolean = false
 
     fun getAnnotation(): EversensePacket? {
         return this.javaClass.annotations.find { it.annotationClass == EversensePacket::class } as? EversensePacket

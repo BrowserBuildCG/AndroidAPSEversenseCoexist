@@ -15,8 +15,8 @@ import com.nightscout.eversense.packets.e365.utils.toUnixArray
  * @param sampleTimestamp Epoch milliseconds of the blood glucose sample
  */
 @EversensePacket(
-    requestId = EversenseE3Packets.SendBloodGlucoseDataWithTwoTimestampsCommandId,
-    responseId = EversenseE3Packets.SendBloodGlucoseDataWithTwoTimestampsResponseId,
+    requestId = EversenseE3Packets.SendBloodGlucoseDataCommandId,
+    responseId = EversenseE3Packets.SendBloodGlucoseDataResponseId,
     typeId = 0,
     securityType = EversenseSecurityType.None
 )
@@ -24,6 +24,7 @@ class SetBloodGlucosePointPacket(
     private val glucoseInMgDl: Int,
     private val sampleTimestamp: Long = System.currentTimeMillis()
 ) : EversenseBasePacket() {
+    override val skipResponseIdValidation: Boolean = true
 
     override fun getRequestData(): ByteArray {
         val now = System.currentTimeMillis()
