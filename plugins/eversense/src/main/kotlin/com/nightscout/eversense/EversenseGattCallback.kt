@@ -111,6 +111,9 @@ class EversenseGattCallback(
         bluetoothGatt?.close()
         bluetoothGatt = null
         connected = false
+        // Clear any in-flight packet so the next write does not block waiting for a response
+        // that will never arrive from the old connection.
+        currentPacket.set(null)
         // Discard any queued tasks from the previous connection — they would run against
         // the new connection and corrupt currentPacket or cause wrong-response errors.
         bleExecutor.shutdownNow()
@@ -465,11 +468,11 @@ class EversenseGattCallback(
                 packet.wait(timeoutMs)
                 val elapsed = System.currentTimeMillis() - start
                 if (elapsed >= timeoutMs) {
+                    currentPacket.set(null)
+                    throw EversenseWriteException("Timed out waiting for response after ${timeoutMs}ms — packet: ${packet.getAnnotation()?.responseId}")
                 } else if (packet.isErrorResponse) {
                     currentPacket.set(null)
                     throw EversenseWriteException("Transmitter returned error response — packet: ${packet.getAnnotation()?.responseId}")
-                    currentPacket.set(null)
-                    throw EversenseWriteException("Timed out waiting for response after ${timeoutMs}ms — packet: ${packet.getAnnotation()?.responseId}")
                 }
             } catch (e: EversenseWriteException) {
                 throw e
