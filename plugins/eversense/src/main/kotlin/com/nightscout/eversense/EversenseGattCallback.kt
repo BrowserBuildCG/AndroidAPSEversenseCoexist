@@ -56,7 +56,7 @@ class EversenseGattCallback(
 
     // FIX 1: Dedicated BLE executor for callbacks; separate network executor for HTTP calls
     // so that network operations in authV2flow() cannot block BLE processing.
-    private val bleExecutor = Executors.newSingleThreadExecutor()
+    private var bleExecutor = Executors.newSingleThreadExecutor()
     private val networkExecutor = Executors.newSingleThreadExecutor()
 
     private val handler = Handler(Looper.getMainLooper())
@@ -111,6 +111,10 @@ class EversenseGattCallback(
         bluetoothGatt?.close()
         bluetoothGatt = null
         connected = false
+        // Discard any queued tasks from the previous connection — they would run against
+        // the new connection and corrupt currentPacket or cause wrong-response errors.
+        bleExecutor.shutdownNow()
+        bleExecutor = Executors.newSingleThreadExecutor()
         EversenseLogger.info(TAG, "GATT cleaned up before reconnect")
     }
     @SuppressLint("MissingPermission")
