@@ -56,7 +56,7 @@ class EversenseGattCallback(
 
     // FIX 1: Dedicated BLE executor for callbacks; separate network executor for HTTP calls
     // so that network operations in authV2flow() cannot block BLE processing.
-    private var bleExecutor = Executors.newSingleThreadExecutor()
+    private val bleExecutor = Executors.newSingleThreadExecutor()
     private val networkExecutor = Executors.newSingleThreadExecutor()
 
     private val handler = Handler(Looper.getMainLooper())
@@ -111,13 +111,6 @@ class EversenseGattCallback(
         bluetoothGatt?.close()
         bluetoothGatt = null
         connected = false
-        // Clear any in-flight packet so the next write does not block waiting for a response
-        // that will never arrive from the old connection.
-        currentPacket.set(null)
-        // Discard any queued tasks from the previous connection — they would run against
-        // the new connection and corrupt currentPacket or cause wrong-response errors.
-        bleExecutor.shutdownNow()
-        bleExecutor = Executors.newSingleThreadExecutor()
         EversenseLogger.info(TAG, "GATT cleaned up before reconnect")
     }
     @SuppressLint("MissingPermission")
@@ -143,7 +136,6 @@ class EversenseGattCallback(
             bluetoothGatt = gatt
             // FIX 3: Set connected flag on confirmed STATE_CONNECTED.
             connected = true
-            failedConnectionAttempts = 0
 
             preferences.edit(commit = true) {
                 putString(StorageKeys.REMOTE_DEVICE_KEY, gatt.device.address)
@@ -177,16 +169,10 @@ class EversenseGattCallback(
             }
 
             if (status == 19) {
-                // For E3 transmitters, status 19 indicates a placement issue — count consecutive failures.
-                // For 365 transmitters, status 19 is normal post-sync disconnect behaviour — do not count.
-                if (!is365()) {
-                    failedConnectionAttempts++
-                    EversenseLogger.warning(TAG, "Connection terminated by transmitter (status 19) — attempt $failedConnectionAttempts")
-                    if (failedConnectionAttempts >= PLACEMENT_WARNING_THRESHOLD) {
-                        handler.post { plugin.watchers.forEach { it.onTransmitterNotPlaced() } }
-                    }
-                } else {
-                    EversenseLogger.debug(TAG, "365 post-sync disconnect (status 19) — normal behaviour, not a placement failure")
+                failedConnectionAttempts++
+                EversenseLogger.warning(TAG, "Connection terminated by transmitter (status 19) — attempt $failedConnectionAttempts")
+                if (failedConnectionAttempts >= PLACEMENT_WARNING_THRESHOLD) {
+                    handler.post { plugin.watchers.forEach { it.onTransmitterNotPlaced() } }
                 }
             } else {
                 failedConnectionAttempts = 0
