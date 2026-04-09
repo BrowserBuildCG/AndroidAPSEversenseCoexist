@@ -136,6 +136,7 @@ class EversenseGattCallback(
             bluetoothGatt = gatt
             // FIX 3: Set connected flag on confirmed STATE_CONNECTED.
             connected = true
+            failedConnectionAttempts = 0
 
             preferences.edit(commit = true) {
                 putString(StorageKeys.REMOTE_DEVICE_KEY, gatt.device.address)
