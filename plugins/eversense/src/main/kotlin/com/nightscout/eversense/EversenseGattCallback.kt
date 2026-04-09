@@ -1,4 +1,4 @@
-package com.nightscout.eversense
+﻿package com.nightscout.eversense
 
 import android.annotation.SuppressLint
 import android.bluetooth.BluetoothGatt
@@ -148,9 +148,6 @@ class EversenseGattCallback(
             }
 
             if (!gatt.requestMtu(512)) {
-                // E3 transmitters may not support MTU negotiation and requestMtu() returns false
-                // immediately without ever calling onMtuChanged. In that case, proceed directly
-                // to service discovery with the default payload size.
                 EversenseLogger.warning(TAG, "requestMtu returned false — skipping to discoverServices with default payload size")
                 payloadSize = 20
                 gatt.discoverServices()
@@ -195,15 +192,12 @@ class EversenseGattCallback(
     @SuppressLint("MissingPermission")
     override fun onMtuChanged(gatt: BluetoothGatt?, mtu: Int, status: Int) {
         if (status != 0) {
-            // E3 transmitters may reject or fail MTU negotiation. Fall back to the default
-            // BLE payload size and continue — without this, discoverServices() is never called
-            // and the E3 silently stalls after connecting.
-            EversenseLogger.warning(TAG, "MTU negotiation failed (status: $status) — using default payload size of 20")
-            payloadSize = 20
-        } else {
-            payloadSize = mtu - 3
-            EversenseLogger.debug(TAG, "New payload size: $payloadSize")
+            EversenseLogger.error(TAG, "Failed to set payload size - status: $status")
+            return
         }
+
+        payloadSize = mtu - 3
+        EversenseLogger.debug(TAG, "New payload size: $payloadSize")
 
         val success = gatt?.discoverServices()
         EversenseLogger.info(TAG, "Trigger discover services - success: $success")
