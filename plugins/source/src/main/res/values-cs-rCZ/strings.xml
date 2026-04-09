@@ -1,6 +1,169 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Source -->
+    <string name="ns_client_bg">NSClient BG</string>
+    <string name="ns_client_bg_short">NS BG</string>
+    <string name="description_source_ns_client">Downloads BG data from Nightscout</string>
+    <string name="source_xdrip">xDrip+ BG</string>
+    <string name="description_source_xdrip">Receive BG values from xDrip+ and compatible apps (Juggluco etc.).</string>
+    <string name="dexcom_app_patched">BYODA</string>
+    <string name="dexcom_short">BYODA</string>
+    <string name="description_source_dexcom">Receive BG values from the \'Build Your Own Dexcom App\'.</string>
+    <string name="glimp">Glimp</string>
+    <string name="description_source_glimp">Receive BG values from Glimp.</string>
+    <string name="mm640g">MM640g</string>
+    <string name="description_source_mm640g">Receive BG values from the 600SeriesAndroidUploader.</string>
+    <string name="poctech">Poctech</string>
+    <string name="description_source_poctech">Receive BG values from Poctech app</string>
+    <string name="glunovo">Glunovo</string>
+    <string name="description_source_glunovo">Receive values from Glunovo app</string>
+    <string name="intelligo">Intelligo</string>
+    <string name="description_source_intelligo">Receive values from Intelligo app</string>
+    <string name="tomato">Tomato (MiaoMiao)</string>
+    <string name="tomato_short">Tomato</string>
+    <string name="description_source_tomato">Receive BG values from Tomato app (MiaoMiao device)</string>
+    <string name="random_bg">Random BG</string>
+    <string name="description_source_random_bg">Generate random BG data (Demo mode only)</string>
+    <string name="random_bg_short">BG</string>
+    <string name="bgsource_settings">BG source settings</string>
+    <string name="bgsource_log_sensor_change_title">Accept sensor start</string>
+    <string name="bgsource_log_sensor_change_summary">Create event \"CGM Sensor Insert\" in Careportal automatically on received sensor start from BG source local broadcast</string>
+    <string name="direction">direction</string>
+    <string name="bg_generation_interval_minutes">BG generation interval minutes</string>
+    <!-- Patched Syai Tag App -->
+    <string name="syai_tag_app">Syai</string>
+    <string name="description_source_patched_syai_tag_app">Receive glucose data from Syai/Ottai App.</string>
+    <!-- Patched SI App -->
+    <string name="patched_si_app">SI App</string>
+    <string name="description_source_patched_si_app">Receive glucose data from Patched Sibionic SI App.</string>
+    <!-- Patched Sino App -->
+    <string name="patched_sino_app">Sino App</string>
+    <string name="description_source_patched_sino_app">Receive glucose data from Patched Sino App.</string>
+    <!-- Eversense plugin -->
+    <string name="source_eversense">Eversense</string>
+    <string name="description_source_eversense">Eversense E3/365 driver</string>
+    <string name="eversense_information_title">Information</string>
+    <string name="eversense_information_connected">Connected</string>
+    <string name="eversense_information_battery">Battery percentage</string>
+    <string name="eversense_information_insertion_date">Insertion date</string>
+    <string name="eversense_information_last_sync">Last synchronisation</string>
+    <string name="eversense_calibration_title">Calibration</string>
+    <string name="eversense_calibration_phase">Phase</string>
+    <string name="eversense_calibration_last">Last calibration</string>
+    <string name="eversense_calibration_next">Next calibration</string>
+    <string name="eversense_calibration_action">Calibrate transmitter</string>
+    <string name="eversense_calibration_too_soon">Too soon — calibration already done in the past 2 hours</string>
+    <string name="eversense_use_smoothing">Use ESEL Smoothing</string>
+    <!-- Credentials section for Eversense 365 DMS login -->
+    <string name="eversense_not_connected">Not connected</string>
+    <string name="eversense_credentials_title">Eversense 365 credentials</string>
+    <string name="eversense_credentials_username">Username</string>
+    <string name="eversense_credentials_password">Password</string>
+    <string name="eversense_credentials_not_set">Not set</string>
+    <string name="eversense_credentials_password_set">Set (hidden)</string>
+    <!-- Device scan dialog -->
+    <string name="eversense_scan_title">Select Eversense transmitter</string>
+    <string name="eversense_scan_cancel">Cancel</string>
+    <string name="eversense_scan_unknown_device">Unknown device</string>
+    <!-- Calibration activity -->
+    <string name="eversense_calibration_ready">Ready to calibrate</string>
+    <string name="eversense_calibration_status">Calibration status</string>
+    <string name="eversense_calibration_bg_value">Blood glucose value</string>
+    <string name="eversense_calibration_bg_hint">Enter BG value</string>
+    <string name="eversense_calibration_submit">Submit calibration</string>
+    <string name="eversense_calibration_invalid_value">Please enter a valid blood glucose value</string>
+    <string name="eversense_calibration_not_supported">Calibration submission is not yet supported by the Eversense SDK</string>
+    <string name="eversense_calibration_not_supported_notice">Note: Calibration submission requires a future SDK update. The UI is ready but the submit action is not yet functional.</string>
+    <string name="eversense_calibration_success">Calibration submitted successfully</string>
+    <string name="eversense_calibration_failed">Failed to submit calibration. Make sure the transmitter is connected and ready.</string>
+    <string name="eversense_information_last_sync_tap">Tap to trigger a full sync</string>
+    <string name="eversense_placement_signal">Placement signal</string>
+    <string name="eversense_placement_title">Transmitter Placement</string>
+    <string name="eversense_placement_guide_heading">Transmitter Placement Guide</string>
+    <string name="eversense_placement_guide_subtitle">Adjust your transmitter position\nto improve signal strength</string>
+    <string name="eversense_signal_excellent">Excellent</string>
+    <string name="eversense_signal_good">Good</string>
+    <string name="eversense_signal_fair">Fair</string>
+    <string name="eversense_signal_weak">Weak</string>
+    <string name="eversense_signal_poor">Poor</string>
+    <string name="eversense_placement_instruction_excellent">Great placement! Keep the transmitter in this position.</string>
+    <string name="eversense_placement_instruction_good">Good placement. Signal is strong.</string>
+    <string name="eversense_placement_instruction_fair">Signal is acceptable. Try moving the transmitter slightly for a better reading.</string>
+    <string name="eversense_placement_instruction_weak">Weak signal. Reposition the transmitter closer to the sensor.</string>
+    <string name="eversense_placement_instruction_poor">Poor signal. Make sure the transmitter is placed directly over the sensor site.</string>
+    <string name="eversense_placement_instruction_not_connected">Connect to your transmitter to view signal strength.</string>
+    <string name="eversense_placement_reading">Reading&#8230;</string>`n    <string name="eversense_placement_connected">Transmitter Connected</string>
+    <string name="eversense_placement_connected_instruction">Your transmitter is connected. Make sure it is positioned directly over your sensor site and secured with the adhesive patch.</string>        <string name="eversense_reconnecting">Reconnecting to transmitter&#8230;</string>
+    <string name="eversense_calibration_sending">Sending calibration&#8230;</string>
+    <string name="eversense_release_for_official_app">Release for Official App</string>
+    <string name="eversense_release_summary">Disconnect so the official Eversense app can connect. AAPS will reconnect every 5 minutes automatically.</string>
+    <string name="eversense_release_active">Released — AAPS reconnecting every 5 minutes…</string>
+    <string name="eversense_coexistence_mode">Coexistence Mode</string>
+    <string name="eversense_coexistence_summary">Automatically disconnect after each sync to give the official Eversense app time to connect and upload data</string>
+    <string name="eversense_transmitter_not_placed">Eversense transmitter not detecting — check placement</string>
+    <string name="eversense_transmitter_not_placed_summary">Make sure the transmitter is placed directly over the sensor site and secured with the adhesive patch.</string>
+</resources>
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Source -->
+    <!-- Patched Syai Tag App -->
+    <!-- Patched SI App -->
+    <!-- Patched Sino App -->
+</resources>
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Source -->
+    <string name="ns_client_bg">КЗ от NS</string>
+    <string name="ns_client_bg_short">NS КЗ</string>
+    <string name="description_source_ns_client">Изтегля стойности на КЗ от Nightscout</string>
+    <string name="source_xdrip">КЗ от xDrip+</string>
+    <string name="dexcom_app_patched">BYODA</string>
+    <string name="dexcom_short">BYODA</string>
+    <string name="description_source_dexcom">Да получава данни за КЗ от модифицираното приложение на Dexcom BYODA.</string>
+    <string name="glimp">Glimp</string>
+    <string name="description_source_glimp">Получава данни за КЗ от Glimp.</string>
+    <string name="mm640g">MM640g</string>
+    <string name="description_source_mm640g">Получават стойности на КЗ от 600SeriesAndroidUploader.</string>
+    <string name="poctech">Poctech</string>
+    <string name="description_source_poctech">Получавай данни за КЗ от Poctech апликацията.</string>
+    <string name="glunovo">Глуново</string>
+    <string name="description_source_glunovo">Получавай данните от Glunowo апликацията</string>
+    <string name="intelligo">Intelligo</string>
+    <string name="description_source_intelligo">Получавай данните от Intelligo апликацията</string>
+    <string name="tomato">Tomato(MяоМяо)</string>
+    <string name="tomato_short">Tomato</string>
+    <string name="description_source_tomato">Получавай КЗ от Tomato апликация (устройство МяоМяо)</string>
+    <string name="random_bg">Произволна КЗ</string>
+    <string name="description_source_random_bg">Генерира произволни захари(демо режим)</string>
+    <string name="random_bg_short">КЗ</string>
+    <string name="direction">Посока</string>
+    <!-- Patched Syai Tag App -->
+    <!-- Patched SI App -->
+    <!-- Patched Sino App -->
+</resources>
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Source -->
+    <string name="description_source_ns_client">Descarrega dades de glucèmia des de Nightscout</string>
+    <string name="dexcom_app_patched">Dexcom (BYODA)</string>
+    <string name="dexcom_short">BYODA</string>
+    <string name="description_source_dexcom">Rebre els valors de glucosa de l\'aplicació Dexcom \'Build Your Own Device\'.</string>
+    <string name="description_source_glimp">Rebre valors de glucèmia de Glimp.</string>
+    <string name="description_source_mm640g">Rebre valors de glucèmia del 600SeriesAndroidUploader.</string>
+    <string name="poctech">Poctech</string>
+    <string name="description_source_poctech">Rebre valors de glucèmia de l\'app Poctech</string>
+    <string name="glunovo">Glunovo</string>
+    <string name="description_source_glunovo">Rebre valors de l\'app Glunovo</string>
+    <string name="tomato">Tomato (MiaoMiao)</string>
+    <string name="tomato_short">Tomato</string>
+    <string name="description_source_tomato">Rebre valors de glucèmia de l\'app Tomato (dispositiu MiaoMiao)</string>
+    <!-- Patched Syai Tag App -->
+    <!-- Patched SI App -->
+    <!-- Patched Sino App -->
+</resources>
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Source -->
     <string name="ns_client_bg">Glykémie z NS</string>
     <string name="ns_client_bg_short">NSGL</string>
     <string name="description_source_ns_client">Příjem glykémií z Nightscoutu</string>
@@ -39,4 +202,834 @@
     <!-- Patched Sino App -->
     <string name="patched_sino_app">Aplikace Sino</string>
     <string name="description_source_patched_sino_app">Přijímat glykémie z upravené aplikace Sino.</string>
+</resources>
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Source -->
+    <string name="ns_client_bg">NSClient BS</string>
+    <string name="ns_client_bg_short">NS BS</string>
+    <string name="description_source_ns_client">Downloader BG data fra Nightscout</string>
+    <string name="source_xdrip">xDrip+ BS</string>
+    <string name="dexcom_app_patched">BYODA</string>
+    <string name="dexcom_short">BYODA</string>
+    <string name="description_source_dexcom">Modtag BS-værdier fra \'Byg din egen Dexcom App\'.</string>
+    <string name="glimp">Glimp</string>
+    <string name="description_source_glimp">Modtag BG-værdier fra Glimp.</string>
+    <string name="mm640g">MM640g</string>
+    <string name="description_source_mm640g">Modtag BG-værdier fra 600SeriesAndroidUploader.</string>
+    <string name="poctech">Poctech</string>
+    <string name="description_source_poctech">Modtag BS-værdier fra Poctech app</string>
+    <string name="glunovo">Glunovo</string>
+    <string name="description_source_glunovo">Modtag værdier fra Glunovo app</string>
+    <string name="intelligo">Intelligo</string>
+    <string name="description_source_intelligo">Modtag værdier fra Intelligo-appen</string>
+    <string name="tomato">Tomato (MiaoMiao)</string>
+    <string name="tomato_short">Tomato</string>
+    <string name="description_source_tomato">Modtag BS-værdier fra Tomato-appen (MiaoMiao enhed)</string>
+    <string name="random_bg">Tilfældigt BS</string>
+    <string name="description_source_random_bg">Generér tilfældig BS-data (kun demotilstand)</string>
+    <string name="random_bg_short">BS</string>
+    <string name="direction">retning</string>
+    <!-- Patched Syai Tag App -->
+    <!-- Patched SI App -->
+    <!-- Patched Sino App -->
+</resources>
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Source -->
+    <string name="ns_client_bg">Nightscout-Client BZ</string>
+    <string name="ns_client_bg_short">NS BZ</string>
+    <string name="description_source_ns_client">Lade Blutzuckerdaten von Nightscout</string>
+    <string name="source_xdrip">xDrip+ BZ</string>
+    <string name="dexcom_app_patched">BYODA</string>
+    <string name="dexcom_short">BYODA</string>
+    <string name="description_source_dexcom">Erhalte BZ-Werte von der \'Build Your Own Dexcom App\'.</string>
+    <string name="glimp">Glimp</string>
+    <string name="description_source_glimp">Empfange Blutzuckerwerte von Glimp.</string>
+    <string name="mm640g">MM640g</string>
+    <string name="description_source_mm640g">Empfange Blutzuckerwerte vom 600SeriesAndroidUploader.</string>
+    <string name="poctech">Poctech</string>
+    <string name="description_source_poctech">Empfange Blutzucker-Werte von der Poctech-App.</string>
+    <string name="glunovo">Glunovo</string>
+    <string name="description_source_glunovo">Werte von der Glunovo App erhalten</string>
+    <string name="intelligo">Intelligo</string>
+    <string name="description_source_intelligo">Empfange Werte von der Intelligo App</string>
+    <string name="tomato">Tomato (MiaoMiao)</string>
+    <string name="tomato_short">Tomato</string>
+    <string name="description_source_tomato">Empfange Blutzucker-Werte von der Tomato-App (MiaoMiao-Geräte)</string>
+    <string name="random_bg">Zufalls-BZ</string>
+    <string name="description_source_random_bg">Zufalls-BZ: Generiert zufällige Blutzuckerdaten (nur im Demo-Modus)</string>
+    <string name="random_bg_short">BZ</string>
+    <string name="direction">Richtung</string>
+    <!-- Patched Syai Tag App -->
+    <!-- Patched SI App -->
+    <!-- Patched Sino App -->
+</resources>
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Source -->
+    <string name="ns_client_bg">NSClient BG</string>
+    <string name="ns_client_bg_short">NS BG</string>
+    <string name="description_source_ns_client">Λήψη δεδομένων BG από Nightscout</string>
+    <string name="source_xdrip">xDrip+ -</string>
+    <string name="dexcom_app_patched">BYODA</string>
+    <string name="dexcom_short">BYODA</string>
+    <string name="description_source_dexcom">Λάβετε τις τιμές BG από την εφαρμογή \'Build Your Own Dexcom App\'.</string>
+    <string name="glimp">Glimp</string>
+    <string name="description_source_glimp">Λάβετε τις τιμές BG από το Glimp.</string>
+    <string name="mm640g">MM640g</string>
+    <string name="description_source_mm640g">Λάβετε τις τιμές BG από το 600SeriesAndroidUploader.</string>
+    <string name="poctech">Poctech</string>
+    <string name="description_source_poctech">Λάβετε τις τιμές BG από την εφαρμογή Poctech</string>
+    <string name="glunovo">Glunovo</string>
+    <string name="description_source_glunovo">Λάβετε τιμές από την εφαρμογή Glunovo</string>
+    <string name="intelligo">Intelligo</string>
+    <string name="description_source_intelligo">Λάβετε τιμές από την εφαρμογή Intelligo</string>
+    <string name="tomato">Tomato (MiaoMiao)</string>
+    <string name="tomato_short">Tomato</string>
+    <string name="description_source_tomato">Λάβετε τιμές BG από Tomato app (MiaoMiao)</string>
+    <string name="random_bg">Τυχαίες τιμές BG</string>
+    <string name="description_source_random_bg">Δημιουργία τυχαίων δεδομένων BG (λειτουργία επίδειξης μόνο)</string>
+    <string name="random_bg_short">BG</string>
+    <string name="direction">κατεύθυνση</string>
+    <!-- Patched Syai Tag App -->
+    <!-- Patched SI App -->
+    <!-- Patched Sino App -->
+</resources>
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Source -->
+    <string name="ns_client_bg">NSClient BG</string>
+    <string name="ns_client_bg_short">NS BG</string>
+    <string name="description_source_ns_client">Recibir los datos de glucosa de Nightscout</string>
+    <string name="source_xdrip">xDrip+ BG</string>
+    <string name="description_source_xdrip">Recibir valores de glucosa de xDrip+ y aplicaciones compatibles (Juggluco etc.).</string>
+    <string name="dexcom_app_patched">Dexcom (BYODA)</string>
+    <string name="dexcom_short">BYODA</string>
+    <string name="description_source_dexcom">Recibir los valores de glucosa de la aplicación Dexcom \'Build Your Own Device\'</string>
+    <string name="glimp">Glimp</string>
+    <string name="description_source_glimp">Recibir valores de glucosa de Glimp.</string>
+    <string name="mm640g">MM640g</string>
+    <string name="description_source_mm640g">Recibir los valores de glucosa del 600SeriesAndroidUploader.</string>
+    <string name="poctech">Poctech</string>
+    <string name="description_source_poctech">Recibir los valores de glucosa de Poctech</string>
+    <string name="glunovo">Glunovo</string>
+    <string name="description_source_glunovo">Recibir los valores de glucosa de la aplicación Glunovo</string>
+    <string name="intelligo">Intelligo</string>
+    <string name="description_source_intelligo">Recibir los valores de glucosa de Intelligo</string>
+    <string name="tomato">Tomato (MiaoMiao)</string>
+    <string name="tomato_short">Tomato</string>
+    <string name="description_source_tomato">Recibir los valores de glucosa de Tomato App (MiaoMiao) </string>
+    <string name="random_bg">Glucosa aleatoria</string>
+    <string name="description_source_random_bg">Generar datos aleatorios de glucosa (sólo modo Demo)</string>
+    <string name="random_bg_short">BG</string>
+    <string name="bgsource_settings">Configuración de Origen de Glucosa</string>
+    <string name="bgsource_log_sensor_change_title">Aceptar inicio de sensor</string>
+    <string name="bgsource_log_sensor_change_summary">Crear evento \"Inserción de sensor\" en el Portal de Cuidados automátciamente al recibir un inicio de sensor desde una fuente de origen de glucosa de transmisión local</string>
+    <string name="direction">dirección</string>
+    <string name="bg_generation_interval_minutes">Intervalo de generación de BG en minutos</string>
+    <!-- Patched Syai Tag App -->
+    <string name="syai_tag_app">Syai</string>
+    <string name="description_source_patched_syai_tag_app">Recibir los valores de glucosa de la aplicación Syai/Ottai.</string>
+    <!-- Patched SI App -->
+    <string name="patched_si_app">Aplicación Sibionic SI</string>
+    <string name="description_source_patched_si_app">Recibir los valores de glucosa de la aplicación parcheada Sibionic SI</string>
+    <!-- Patched Sino App -->
+    <string name="patched_sino_app">Aplicación Sino</string>
+    <string name="description_source_patched_sino_app">Recibir los valores de glucosa de la aplicación parcheada Sino</string>
+</resources>
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Source -->
+    <string name="ns_client_bg">Glycémie NSClient</string>
+    <string name="ns_client_bg_short">Gly NS</string>
+    <string name="description_source_ns_client">Télécharge les glycémies depuis Nightscout</string>
+    <string name="source_xdrip">xDrip+ Glycémie</string>
+    <string name="description_source_xdrip">Recevoir des valeurs de glycémie depuis xDrip+ et des applications compatibles (Juggluco etc.).</string>
+    <string name="dexcom_app_patched">BYODA</string>
+    <string name="dexcom_short">BYODA</string>
+    <string name="description_source_dexcom">Recevoir les valeurs de glycémie de l’application Dexcom patchée (BYODA).</string>
+    <string name="glimp">Glimp</string>
+    <string name="description_source_glimp">Recevoir les glycémies depuis Glimp.</string>
+    <string name="mm640g">Medtronic 640g</string>
+    <string name="description_source_mm640g">Recevoir les glycémies depuis le 600SeriesAndroidUploder.</string>
+    <string name="poctech">Poctech</string>
+    <string name="description_source_poctech">Recevoir les glycémies depuis l\'app Poctech</string>
+    <string name="glunovo">Glunovo</string>
+    <string name="description_source_glunovo">Recevoir des valeurs de l\'application Glunovo</string>
+    <string name="intelligo">Intelligo</string>
+    <string name="description_source_intelligo">Recevoir des valeurs depuis l\'application Intelligo</string>
+    <string name="tomato">Tomato (MiaoMiao)</string>
+    <string name="tomato_short">Tomato</string>
+    <string name="description_source_tomato">Recevoir les valeurs de glycémie de l\'application Tomato (appareil MiaoMiao)</string>
+    <string name="random_bg">Gly Aléatoire</string>
+    <string name="description_source_random_bg">Générer des glycémies aléatoires (mode démo uniquement)</string>
+    <string name="random_bg_short">Gly</string>
+    <string name="bgsource_settings">Paramètres Source des glycémies</string>
+    <string name="bgsource_log_sensor_change_title">Accepter le démarrage du capteur</string>
+    <string name="bgsource_log_sensor_change_summary">Créer un événement \"Insertion de capteur MGC\" dans Careportal automatiquement lors de la réception de \"démarrage capteur\" à partir de la diffusion locale de la source des glycémies</string>
+    <string name="direction">direction</string>
+    <string name="bg_generation_interval_minutes">Interval de temps entre les glycémies (min)</string>
+    <!-- Patched Syai Tag App -->
+    <string name="syai_tag_app">Syai</string>
+    <string name="description_source_patched_syai_tag_app">Recevoir les glycémies de l’application Syai/Ottai.</string>
+    <!-- Patched SI App -->
+    <string name="patched_si_app">Application SI</string>
+    <string name="description_source_patched_si_app">Recevoir des données de glucose de l\'application Patched Sibionic SI.</string>
+    <!-- Patched Sino App -->
+    <string name="patched_sino_app">Application Sino</string>
+    <string name="description_source_patched_sino_app">Recevoir des données de glucose de l\'application Patched Sino.</string>
+</resources>
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Source -->
+    <string name="description_source_ns_client">Preuzima podatke o GUK-u s Nightscout-a</string>
+    <string name="description_source_glimp">Primajte vrijednosti GUK-a od Glimpa.</string>
+    <string name="description_source_mm640g">Primajte vrijednosti glukoze u krvi od 600SeriesAndroidUploader.</string>
+    <string name="intelligo">Intelligo</string>
+    <string name="description_source_intelligo">Primite vrijednosti iz aplikacije Intelligo</string>
+    <!-- Patched Syai Tag App -->
+    <!-- Patched SI App -->
+    <!-- Patched Sino App -->
+</resources>
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Source -->
+    <string name="poctech">Poctech</string>
+    <string name="tomato">Tomato (MiaoMiao)</string>
+    <string name="tomato_short">Tomato</string>
+    <!-- Patched Syai Tag App -->
+    <!-- Patched SI App -->
+    <!-- Patched Sino App -->
+</resources>
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Source -->
+    <string name="ns_client_bg">BG NSClient</string>
+    <string name="ns_client_bg_short">BG NS</string>
+    <string name="description_source_ns_client">Scarica dati glicemia da Nightscout</string>
+    <string name="source_xdrip">BG xDrip+</string>
+    <string name="description_source_xdrip">Ricevi valori glicemia da xDrip+ e app compatibili (Juggluco ecc.).</string>
+    <string name="dexcom_app_patched">BYODA</string>
+    <string name="dexcom_short">BYODA</string>
+    <string name="description_source_dexcom">Ricevi valori glicemia dall\'app Dexcom ottenuta con \'Build Your Own Dexcom App\'.</string>
+    <string name="glimp">Glimp</string>
+    <string name="description_source_glimp">Ricevi valori glicemia da Glimp.</string>
+    <string name="mm640g">MM640g</string>
+    <string name="description_source_mm640g">Ricevi valori glicemia da 600SeriesAndroidUploader.</string>
+    <string name="poctech">Poctech</string>
+    <string name="description_source_poctech">Ricevi valori glicemia da app Poctech</string>
+    <string name="glunovo">Glunovo</string>
+    <string name="description_source_glunovo">Ricevi valori glicemia da app Glunovo</string>
+    <string name="intelligo">Intelligo</string>
+    <string name="description_source_intelligo">Ricevi valori da app Intelligo</string>
+    <string name="tomato">Tomato (MiaoMiao)</string>
+    <string name="tomato_short">Tomato</string>
+    <string name="description_source_tomato">Ricevi valori glicemia da app Tomato (dispositivo MiaoMiao)</string>
+    <string name="random_bg">BG casuale</string>
+    <string name="description_source_random_bg">Genera dati glicemia casuali (solo modalità demo)</string>
+    <string name="random_bg_short">BG</string>
+    <string name="bgsource_settings">Impostazioni sorgente glicemia</string>
+    <string name="bgsource_log_sensor_change_title">Accetta avvio sensore</string>
+    <string name="bgsource_log_sensor_change_summary">Crea evento \"CGM Sensore Inserito\" in Careportal automaticamente all\'avvio del sensore ricevuto dalla trasmissione locale sorgente BG</string>
+    <string name="direction">direzione</string>
+    <string name="bg_generation_interval_minutes">Minuti intervallo generazione glicemia</string>
+    <!-- Patched Syai Tag App -->
+    <string name="syai_tag_app">Syai</string>
+    <string name="description_source_patched_syai_tag_app">Ricevi dati della glicemia dall\'app Ottai.</string>
+    <!-- Patched SI App -->
+    <string name="patched_si_app">App SI</string>
+    <string name="description_source_patched_si_app">Ricevi i dati di glucosio dall\'app Sibionic SI patchata.</string>
+    <!-- Patched Sino App -->
+    <string name="patched_sino_app">App Sino</string>
+    <string name="description_source_patched_sino_app">Ricevi i dati di glucosio dall\'app Sino patchata.</string>
+</resources>
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Source -->
+    <string name="ns_client_bg">נתוני סוכר מ-NSClient</string>
+    <string name="ns_client_bg_short">נתוני סוכר מ-NS</string>
+    <string name="description_source_ns_client">הורדת ערכי סוכר בדם מ-Nightscout</string>
+    <string name="source_xdrip">נתוני סוכר מ-xDrip+</string>
+    <string name="description_source_xdrip">מקבל ערכי סוכר מ-xDrip ומיישומים מתאימים (Juggluco ועוד).</string>
+    <string name="dexcom_app_patched">BYODA</string>
+    <string name="dexcom_short">BYODA</string>
+    <string name="description_source_dexcom">השתמש בנתוני הסוכר מאפליקציית \"בנה לעצמך דקסקום\" (BYODA).</string>
+    <string name="glimp">Glimp</string>
+    <string name="description_source_glimp">קבלת ערכי סוכר בדם מאפליקציית Glimp.</string>
+    <string name="mm640g">Minimed 640G</string>
+    <string name="description_source_mm640g">קבלת ערכי סוכר בדם מ-600SeriesAndroidUploader.</string>
+    <string name="poctech">Poctech</string>
+    <string name="description_source_poctech">קבלת ערכי סוכר מיישום Poctech</string>
+    <string name="glunovo">Glunovo</string>
+    <string name="description_source_glunovo">קבלת ערכי סוכר מיישום Glunovo</string>
+    <string name="intelligo">Intelligo</string>
+    <string name="description_source_intelligo">קבלת ערכי סוכר מיישום Intelligo</string>
+    <string name="tomato">Tomato (MiaoMiao)</string>
+    <string name="tomato_short">Tomato</string>
+    <string name="description_source_tomato">קבלת ערכי סוכר מאפליקציית Tomato (התקן MiaoMiao)</string>
+    <string name="random_bg">נתוני סוכר אקראיים</string>
+    <string name="description_source_random_bg">הפקת נתוני גלוקוז אקראיים (מצב הדגמה בלבד)</string>
+    <string name="random_bg_short">נתוני סוכר</string>
+    <string name="bgsource_settings">הגדרות מקור נתוני סוכר</string>
+    <string name="bgsource_log_sensor_change_title">קבל הפעלת חיישן</string>
+    <string name="bgsource_log_sensor_change_summary">צור באופן אוטומטי אירוע \"החדרת חיישן\" בפורטל הטיפולים עם קבלת אירוע התחלת חיישן משידור מקומי של מקור נתוני הסוכר</string>
+    <string name="direction">כיוון</string>
+    <string name="bg_generation_interval_minutes">מרווח זמן לקריאת רמת סוכר (דקות)</string>
+    <!-- Patched Syai Tag App -->
+    <!-- Patched SI App -->
+    <!-- Patched Sino App -->
+</resources>
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Source -->
+    <string name="ns_client_bg">NSClient BG</string>
+    <string name="ns_client_bg_short">NS BG</string>
+    <string name="description_source_ns_client">Nightscout에서 다운로드하여 혈당값 받기</string>
+    <string name="source_xdrip">xDrip+ BG</string>
+    <string name="dexcom_app_patched">BYODA</string>
+    <string name="dexcom_short">BYODA</string>
+    <string name="description_source_dexcom">\'자신만의 덱스콤 앱 만들기(BYODA)\'에서 BG 값을 수신합니다.</string>
+    <string name="glimp">보기</string>
+    <string name="description_source_glimp">Glimp에서 혈당값 받기</string>
+    <string name="mm640g">MM640g</string>
+    <string name="description_source_mm640g">600SeriesAndroidUploader에서 혈당값 받기</string>
+    <string name="poctech">Poctech</string>
+    <string name="description_source_poctech">Poctech 앱에서 혈당값 받기</string>
+    <string name="glunovo">Glunovo</string>
+    <string name="description_source_glunovo">Glunovo에서 값 받기</string>
+    <string name="intelligo">Intelligo</string>
+    <string name="description_source_intelligo">Intelligo 앱에서 값 받기</string>
+    <string name="tomato">Tomato (MiaoMiao)</string>
+    <string name="tomato_short">Tomato</string>
+    <string name="description_source_tomato">혈당값이 Tomato앱(MiaoMaio장치) 으로부터 수신되었습니다.</string>
+    <string name="random_bg">무작위 BG</string>
+    <string name="description_source_random_bg">무작위로 BG 데이터를 생성합니다 (데모 버전 전용)</string>
+    <string name="random_bg_short">BG</string>
+    <string name="direction">방향</string>
+    <!-- Patched Syai Tag App -->
+    <!-- Patched SI App -->
+    <!-- Patched Sino App -->
+</resources>
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Source -->
+    <string name="ns_client_bg">NSClient</string>
+    <string name="ns_client_bg_short">NS Glik</string>
+    <string name="description_source_ns_client">Gauti glikemijos duomenis iš Nightscout</string>
+    <string name="source_xdrip">xDrip+</string>
+    <string name="dexcom_app_patched">BYODA</string>
+    <string name="dexcom_short">BYODA</string>
+    <string name="description_source_dexcom">Gauti glikemijos duomenis iš \'Build Your Own Dexcom App\'</string>
+    <string name="glimp">Glimp</string>
+    <string name="description_source_glimp">Gauti glikemijos duomenis iš Glimp</string>
+    <string name="mm640g">MM640g</string>
+    <string name="description_source_mm640g">Gauti glikemijos duomenis iš 600SeriesAndroidUploader</string>
+    <string name="poctech">Poctech</string>
+    <string name="description_source_poctech">Gauti glikemijos duomenis iš Poctech</string>
+    <string name="glunovo">Glunovo</string>
+    <string name="description_source_glunovo">Gauti glikemijos duomenis iš Glunovo</string>
+    <string name="intelligo">Intelligo</string>
+    <string name="description_source_intelligo">Gauti glikemijos duomenis iš Intelligo</string>
+    <string name="tomato">Tomato (MiaoMiao)</string>
+    <string name="tomato_short">Tomato</string>
+    <string name="description_source_tomato">Gauti glikemijos duomenis iš Tomato (MiaoMiao)</string>
+    <string name="random_bg">Atsitiktinė glikemija</string>
+    <string name="description_source_random_bg">Generuoti atsitiktinę glikemiją (tik demo režime)</string>
+    <string name="random_bg_short">AG</string>
+    <string name="direction">kryptis</string>
+    <string name="bg_generation_interval_minutes">KG generavimo intervalas minutėmis</string>
+    <!-- Patched Syai Tag App -->
+    <!-- Patched SI App -->
+    <!-- Patched Sino App -->
+</resources>
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Source -->
+    <string name="ns_client_bg">NSClient BS</string>
+    <string name="ns_client_bg_short">NS BS</string>
+    <string name="description_source_ns_client">Last ned BS-verdier fra Nightscout</string>
+    <string name="source_xdrip">xDrip+ BS</string>
+    <string name="description_source_xdrip">Motta BS-verdier fra xDrip+ og kompatible apper (Juggluco etc.).</string>
+    <string name="dexcom_app_patched">BYODA</string>
+    <string name="dexcom_short">BYODA</string>
+    <string name="description_source_dexcom">Motta BS-verdier fra appen \'Build Your Own Dexcom App\'.</string>
+    <string name="glimp">Glimp</string>
+    <string name="description_source_glimp">Motta BS-verdier fra Glimp.</string>
+    <string name="mm640g">MM640G</string>
+    <string name="description_source_mm640g">Motta BS-verdier fra 600SeriesAndroidUploader.</string>
+    <string name="poctech">Poctech</string>
+    <string name="description_source_poctech">Motta BS-verdier fra appen Poctech</string>
+    <string name="glunovo">Glunovo</string>
+    <string name="description_source_glunovo">Motta BS-verdier fra appen Glunovo</string>
+    <string name="intelligo">Intelligo</string>
+    <string name="description_source_intelligo">Motta BS-verdier fra appen Intelligo</string>
+    <string name="tomato">Tomato (MiaoMiao)</string>
+    <string name="tomato_short">Tomato</string>
+    <string name="description_source_tomato">Motta BS-verdier fra appen Tomato (MiaoMiao-enhet)</string>
+    <string name="random_bg">Vilkårlig BS</string>
+    <string name="description_source_random_bg">Generer vilkårlige BS-data (kun demo formål)</string>
+    <string name="random_bg_short">BS</string>
+    <string name="bgsource_settings">Innstillinger for BS-kilde</string>
+    <string name="bgsource_log_sensor_change_title">Aksepter sensorstart</string>
+    <string name="bgsource_log_sensor_change_summary">Opprett hendelsen \"Bytte av CGM-sensor\" i helseportal automatisk ved mottak av sensorstart fra BS-kildens lokal kringkasting</string>
+    <string name="direction">retning</string>
+    <string name="bg_generation_interval_minutes">BS-genereringsintervall i minutter</string>
+    <!-- Patched Syai Tag App -->
+    <string name="syai_tag_app">Syai</string>
+    <string name="description_source_patched_syai_tag_app">Motta blodsukkerverdier fra Syai/Ottai App.</string>
+    <!-- Patched SI App -->
+    <string name="patched_si_app">SI app</string>
+    <string name="description_source_patched_si_app">Motta BS-verdier fra den patchede appen Sibionic SI.</string>
+    <!-- Patched Sino App -->
+    <string name="patched_sino_app">Sino app</string>
+    <string name="description_source_patched_sino_app">Motta BS-verdier fra den patchede appen Sino.</string>
+</resources>
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Source -->
+    <string name="ns_client_bg">NSClient BG</string>
+    <string name="ns_client_bg_short">NS BG</string>
+    <string name="description_source_ns_client">Download BG waardes van Nightscout</string>
+    <string name="source_xdrip">xDrip+ BG</string>
+    <string name="description_source_xdrip">Ontvang BG waarden van xDrip+ en compatibele apps (Juggluco etc.).</string>
+    <string name="dexcom_app_patched">BYODA</string>
+    <string name="dexcom_short">BYODA</string>
+    <string name="description_source_dexcom">Ontvang BG waarden van de \'Build Your Own Dexcom App\' (BYODA).</string>
+    <string name="glimp">Glimp</string>
+    <string name="description_source_glimp">Ontvang BG waardes van Glimp.</string>
+    <string name="mm640g">MM640g</string>
+    <string name="description_source_mm640g">Ontvang BG waardes van 600SeriesAndroidUploader.</string>
+    <string name="poctech">Poctech</string>
+    <string name="description_source_poctech">Ontvang BG waardes van Poctech app</string>
+    <string name="glunovo">Glunovo</string>
+    <string name="description_source_glunovo">Ontvang waardes van Glunovo app</string>
+    <string name="intelligo">Intelligo</string>
+    <string name="description_source_intelligo">Ontvang waarden van de Intelligo app</string>
+    <string name="tomato">Tomato (MiaoMiao)</string>
+    <string name="tomato_short">Tomato</string>
+    <string name="description_source_tomato">Ontvang BG waardes van Tomato app (MiaoMiao apparaatje)</string>
+    <string name="random_bg">Willekeurige BG</string>
+    <string name="description_source_random_bg">Willekeurige BG data genereren (alleen Demo modus)</string>
+    <string name="random_bg_short">BG</string>
+    <string name="bgsource_settings">BG bron instellingen</string>
+    <string name="bgsource_log_sensor_change_title">Accepteer sensor start</string>
+    <string name="bgsource_log_sensor_change_summary">Maak automatisch een gebeurtenis \"CGM Sensor Insert\" aan in de Careportal bij het ontvangen van een sensor start bericht van een lokale BG bron</string>
+    <string name="direction">richting</string>
+    <string name="bg_generation_interval_minutes">Interval BG generatie minuten</string>
+    <!-- Patched Syai Tag App -->
+    <string name="syai_tag_app">Syai</string>
+    <string name="description_source_patched_syai_tag_app">Ontvang glucose-gegevens van de Syai/Ottai App.</string>
+    <!-- Patched SI App -->
+    <string name="patched_si_app">SI App</string>
+    <string name="description_source_patched_si_app">Ontvang glucose gegevens van Patched Sibionic SI App.</string>
+    <!-- Patched Sino App -->
+    <string name="patched_sino_app">Sino App</string>
+    <string name="description_source_patched_sino_app">Ontvang glucose gegevens van Patched Sino App.</string>
+</resources>
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Source -->
+    <string name="ns_client_bg">NSClient BG</string>
+    <string name="ns_client_bg_short">NS BG</string>
+    <string name="description_source_ns_client">Pobieraj wartości BG z Nightscout</string>
+    <string name="source_xdrip">xDrip+ BG</string>
+    <string name="description_source_xdrip">Otrzymuj glikemię z xDrip+ i kompatybilnych aplikacji (Juggluco itp.).</string>
+    <string name="dexcom_app_patched">Dexcom Patched</string>
+    <string name="dexcom_short">DEX.PATCH.</string>
+    <string name="description_source_dexcom">Pobieraj glikemię ze spatchowanej aplikacji Dexcom.</string>
+    <string name="glimp">Glimp</string>
+    <string name="description_source_glimp">Pobieraj wartości BG z Glimp.</string>
+    <string name="mm640g">MM640g</string>
+    <string name="description_source_mm640g">Pobieraj wartości BG z uploadera pomp serii 600.</string>
+    <string name="poctech">Poctech</string>
+    <string name="description_source_poctech">Odczytuj wartości BG z aplikacji Poctech</string>
+    <string name="glunovo">Glunovo</string>
+    <string name="description_source_glunovo">Otrzymuj wartości z aplikacji Glunovo</string>
+    <string name="intelligo">Intelligo</string>
+    <string name="description_source_intelligo">Otrzymuj wartości z aplikacji Intelligo</string>
+    <string name="tomato">Tomato (MiaoMiao)</string>
+    <string name="tomato_short">Tomato</string>
+    <string name="description_source_tomato">Otrzymuj poziomy cukru (BG) z Apki Tomato) (urządzenie MiaoMiao)</string>
+    <string name="random_bg">Losowa glikemia</string>
+    <string name="description_source_random_bg">Generuj losowe odczyty glukozy (wyłącznie do celów demonstracyjnych)</string>
+    <string name="random_bg_short">BG</string>
+    <string name="bgsource_settings">Ustawienia źródła glikemii</string>
+    <string name="bgsource_log_sensor_change_title">Akceptuj start sensora</string>
+    <string name="bgsource_log_sensor_change_summary">Utwórz zdarzenie \"CGM Sensor Insert\" w Careportal automatycznie po odebraniu informacji o starcie sensora z lokalnego źródła glikemii</string>
+    <string name="direction">kierunek</string>
+    <string name="bg_generation_interval_minutes">Interwał generowania glikemii w minutach</string>
+    <!-- Patched Syai Tag App -->
+    <string name="syai_tag_app">Syai</string>
+    <string name="description_source_patched_syai_tag_app">Otrzymuj glikemię z aplikacji Syai/Ottai.</string>
+    <!-- Patched SI App -->
+    <string name="patched_si_app">SI App</string>
+    <string name="description_source_patched_si_app">Otrzymuj glikemię z patchowanej aplikacji Sibionic SI.</string>
+    <!-- Patched Sino App -->
+    <string name="patched_sino_app">Sino App</string>
+    <string name="description_source_patched_sino_app">Otrzymuj glikemię z patchowanej aplikacji Sino.</string>
+</resources>
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Source -->
+    <string name="ns_client_bg">Glicemia via NSClient</string>
+    <string name="ns_client_bg_short">Glicose via NS</string>
+    <string name="description_source_ns_client">Downloads de dados de Glicose do Nightscout</string>
+    <string name="source_xdrip">xDrip+</string>
+    <string name="dexcom_app_patched">BYODA</string>
+    <string name="dexcom_short">BYODA</string>
+    <string name="description_source_dexcom">Receber valores de glicemia do \'Build Your Own Dexcom App\'.</string>
+    <string name="glimp">Glimp</string>
+    <string name="description_source_glimp">Receber valores BG do Glimp.</string>
+    <string name="mm640g">MM640g</string>
+    <string name="description_source_mm640g">Receber valores de Glucose do 600SeriesAndroidUploader.</string>
+    <string name="poctech">Poctech</string>
+    <string name="description_source_poctech">Receber valores Glucose da app Poctech</string>
+    <string name="glunovo">Glunovo</string>
+    <string name="description_source_glunovo">Receber valores GLIC do aplicativo Glunovo</string>
+    <string name="intelligo">Intelligo</string>
+    <string name="description_source_intelligo">Receber valores da app Intelligo</string>
+    <string name="tomato">Tomato (MiaoMiao)</string>
+    <string name="tomato_short">Tomato</string>
+    <string name="description_source_tomato">Receber valores de Glicose da aplicação Tomato (dispositivo MiaoMiao)</string>
+    <string name="random_bg">Glicemia aleatória</string>
+    <string name="description_source_random_bg">Gerar dados aleatórios de glicemia (apenas no modo de demonstração)</string>
+    <string name="random_bg_short">Glicemia</string>
+    <string name="direction">direção</string>
+    <!-- Patched Syai Tag App -->
+    <!-- Patched SI App -->
+    <!-- Patched Sino App -->
+</resources>
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Source -->
+    <string name="description_source_ns_client">Descarrega dados Glicose do Nightscout</string>
+    <string name="dexcom_app_patched">BYODA</string>
+    <string name="dexcom_short">BYODA</string>
+    <string name="description_source_dexcom">Receber valores de glicemia do aplicativo BYODA.</string>
+    <string name="description_source_glimp">Receber valores Glicose do Glimp.</string>
+    <string name="description_source_mm640g">Receber valores Glicose do 600SeriesAndroidUploader.</string>
+    <string name="poctech">Poctech</string>
+    <string name="description_source_poctech">Receber valores Glucose da app Poctech</string>
+    <string name="glunovo">Glunovo</string>
+    <string name="description_source_glunovo">Receber valores do aplicativo Glunovo</string>
+    <string name="tomato">Tomato (MiaoMiao)</string>
+    <string name="tomato_short">Tomato</string>
+    <string name="description_source_tomato">Receber valores de Glicose da app Tomato (dispositivo MiaoMiao)</string>
+    <!-- Patched Syai Tag App -->
+    <!-- Patched SI App -->
+    <!-- Patched Sino App -->
+</resources>
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Source -->
+    <string name="ns_client_bg">Glicemie NSClient</string>
+    <string name="ns_client_bg_short">NS GL</string>
+    <string name="description_source_ns_client">Descarcă datele despre glicemii din Nightscout</string>
+    <string name="source_xdrip">Glicemie xDrip+</string>
+    <string name="description_source_xdrip">Primește valori glicemice de la xDrip+ și aplicații compatibile (Juggluco etc.).</string>
+    <string name="dexcom_app_patched">BYODA</string>
+    <string name="dexcom_short">BYODA</string>
+    <string name="description_source_dexcom">Primește valori de glicemie de la aplicația Dexcom modificată.</string>
+    <string name="glimp">Glimp</string>
+    <string name="description_source_glimp">Primește valorile glicemiei din aplicația Glimp.</string>
+    <string name="mm640g">MM640g</string>
+    <string name="description_source_mm640g">Primește valorile glicemiei din aplicația 600SeriesAndroidUploader (Medtronic).</string>
+    <string name="poctech">Poctech</string>
+    <string name="description_source_poctech">Citire a valorii glicemiei din aplicația Poctech</string>
+    <string name="glunovo">Glunovo</string>
+    <string name="description_source_glunovo">Primiți glicemii de la aplicația Glunovo</string>
+    <string name="intelligo">Intelligo</string>
+    <string name="description_source_intelligo">Primeşte valori de la aplicaţia Intelligo</string>
+    <string name="tomato">Tomato (MiaoMiao)</string>
+    <string name="tomato_short">Tomato</string>
+    <string name="description_source_tomato">Înregistrează valorile glicemiei din aplicația Tomato (dispozitiv MiaoMIao)</string>
+    <string name="random_bg">Glicemie aleatoare</string>
+    <string name="description_source_random_bg">Generează glicemie aleatoare (doar mod Demo)</string>
+    <string name="random_bg_short">Glicemie</string>
+    <string name="bgsource_settings">Setări sursă glicemie</string>
+    <string name="bgsource_log_sensor_change_title">Acceptați pornirea senzorului</string>
+    <string name="bgsource_log_sensor_change_summary">Creează evenimentul \"CGM Sensor Insert\" în Careportal automat la pornirea senzorului primită de la o sursă de transmisie locală a glicemiei</string>
+    <string name="direction">direcție</string>
+    <string name="bg_generation_interval_minutes">Minute interval de generare al glicemiei</string>
+    <!-- Patched Syai Tag App -->
+    <string name="syai_tag_app">Syai</string>
+    <string name="description_source_patched_syai_tag_app">Primiți date de glicemie din aplicația Syai/Ottai.</string>
+    <!-- Patched SI App -->
+    <string name="patched_si_app">Aplicația SI</string>
+    <string name="description_source_patched_si_app">Primiți date glicemice din aplicația Sibionic SI modificată.</string>
+    <!-- Patched Sino App -->
+    <string name="patched_sino_app">Aplicația Sino</string>
+    <string name="description_source_patched_sino_app">Primiți date glicemice din aplicația Sino modificată.</string>
+</resources>
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Source -->
+    <string name="ns_client_bg">ГК с клиента Nightscout</string>
+    <string name="ns_client_bg_short">ГК с NS</string>
+    <string name="description_source_ns_client">Получать данные гликемии с сайта Nightscout</string>
+    <string name="source_xdrip">ГК с xDrip+ </string>
+    <string name="description_source_xdrip">Получать значения ГК от xDrip+ и совместимых приложений (Juggluco и т.д.).</string>
+    <string name="dexcom_app_patched">Самост собран прилож Dexcom</string>
+    <string name="dexcom_short">ССП DEXCOM</string>
+    <string name="description_source_dexcom">Получать данные ГК от \'Самостоятельно собранного приложения Dexcom\'.</string>
+    <string name="glimp">Glimp</string>
+    <string name="description_source_glimp">Получать данные гликемии от Glimp.</string>
+    <string name="mm640g">MM640g</string>
+    <string name="description_source_mm640g">Получать данные гликемии от 600SeriesAndroidUploader.</string>
+    <string name="poctech">Poctech</string>
+    <string name="description_source_poctech">Получать данные гликемии от приложения Poctech</string>
+    <string name="glunovo">Приложение Glunovo</string>
+    <string name="description_source_glunovo">Получать данные гликемии от приложения Glunovo</string>
+    <string name="intelligo">Приложение Intelligo</string>
+    <string name="description_source_intelligo">Получать данные гликемии от приложения Intelligo</string>
+    <string name="tomato">Томато (MiaoMiao)</string>
+    <string name="tomato_short">Томато</string>
+    <string name="description_source_tomato">Получать значения ГК от приложения Tomato (устройство MiaoMiao)</string>
+    <string name="random_bg">Случайные значения ГК</string>
+    <string name="description_source_random_bg">Генерировать случайные данные ГК (только демо-режим)</string>
+    <string name="random_bg_short">ГК</string>
+    <string name="bgsource_settings">Параметры источника ГК</string>
+    <string name="bgsource_log_sensor_change_title">Принять запуск датчика</string>
+    <string name="bgsource_log_sensor_change_summary">Автоматически создавать событие \"Установка сенсора\" в Портале терапии при локальном оповещении о запуске датчика от источника ГК</string>
+    <string name="direction">направление</string>
+    <string name="bg_generation_interval_minutes">Интервал генерации ГК в мин</string>
+    <!-- Patched Syai Tag App -->
+    <string name="syai_tag_app">Syai</string>
+    <string name="description_source_patched_syai_tag_app">Получать данные гликемии от приложения Syai/Ottai.</string>
+    <!-- Patched SI App -->
+    <string name="patched_si_app">SI App</string>
+    <string name="description_source_patched_si_app">Получать данные из патч приложения Sibionic SI.</string>
+    <!-- Patched Sino App -->
+    <string name="patched_sino_app">Sino App</string>
+    <string name="description_source_patched_sino_app">Получать данные от патч-приложения Sino App.</string>
+</resources>
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Source -->
+    <string name="ns_client_bg">Glykémia z NS</string>
+    <string name="ns_client_bg_short">NS GL</string>
+    <string name="description_source_ns_client">Získavať hodnoty glykémií z Nightscoutu</string>
+    <string name="source_xdrip">xDrip+ glykémia</string>
+    <string name="description_source_xdrip">Prijímať hodnoty glykémie z xDrip+ a kompatibilných aplikácí (Juggluco atď.).</string>
+    <string name="dexcom_app_patched">BYODA</string>
+    <string name="dexcom_short">BYODA</string>
+    <string name="description_source_dexcom">Prijímať hodnoty glykémií z upravenej aplikácie Dexcom (BYODA).</string>
+    <string name="glimp">Glimp</string>
+    <string name="description_source_glimp">Získavať hodnoty glykémií z aplikácie Glimp.</string>
+    <string name="mm640g">MM640g</string>
+    <string name="description_source_mm640g">Získavať hodnoty glykémií z 600SeriesAndroidUploader.</string>
+    <string name="poctech">Poctech</string>
+    <string name="description_source_poctech">Získavať glykémie z aplikácie Poctech</string>
+    <string name="glunovo">Glunovo</string>
+    <string name="description_source_glunovo">Získavať glykémie z aplikácie Glunovo</string>
+    <string name="intelligo">Intelligo</string>
+    <string name="description_source_intelligo">Prijímať hodnoty z aplikácie Intelligo</string>
+    <string name="tomato">Tomato (MiaoMiao)</string>
+    <string name="tomato_short">Tomato</string>
+    <string name="description_source_tomato">Prijímať glykémie z aplikácie Tomato (zariadenie MiaoMiao)</string>
+    <string name="random_bg">Náhodná glykémia</string>
+    <string name="description_source_random_bg">Vygeneruj náhodné dáta glykémií (iba Demo režim)</string>
+    <string name="random_bg_short">Gly</string>
+    <string name="bgsource_settings">Nastavenie zdroja glykémie</string>
+    <string name="bgsource_log_sensor_change_title">Prijať spustenie senzora</string>
+    <string name="bgsource_log_sensor_change_summary">Automaticky vytvoriť udalosť „Výmena senzora“ v časti Starostlivosť pri spustení senzora zo zdroja glykémie pomocou lokálneho odosielania dát</string>
+    <string name="direction">smer</string>
+    <string name="bg_generation_interval_minutes">Interval generovania glykémie v minútach</string>
+    <!-- Patched Syai Tag App -->
+    <string name="syai_tag_app">Syai</string>
+    <string name="description_source_patched_syai_tag_app">Prijímať glykémie z aplikáce Syai/Ottai.</string>
+    <!-- Patched SI App -->
+    <string name="patched_si_app">Aplikácia SI</string>
+    <string name="description_source_patched_si_app">Prijímať glykémie z upravenej aplikácie Sibionic SI.</string>
+    <!-- Patched Sino App -->
+    <string name="patched_sino_app">Aplikácia Sino</string>
+    <string name="description_source_patched_sino_app">Prijímať glykémie z upravenej aplikácie Sino.</string>
+</resources>
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Source -->
+    <string name="description_source_ns_client">Preuzimajte podatke GUK sa Nightscout-a</string>
+    <string name="description_source_glimp">Preuzimajte vrednosti GUK od Glimp-a.</string>
+    <string name="description_source_mm640g">Preuzimajte vrednosti GUK od 600SeriesAndroidUploader-a.</string>
+    <!-- Patched Syai Tag App -->
+    <!-- Patched SI App -->
+    <!-- Patched Sino App -->
+</resources>
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Source -->
+    <string name="ns_client_bg">NSClient BG</string>
+    <string name="ns_client_bg_short">NS BG</string>
+    <string name="description_source_ns_client">Ladda ner BG-data från Nightscout</string>
+    <string name="source_xdrip">xDrip+ BG</string>
+    <string name="dexcom_app_patched">Patchad Dexcom-app</string>
+    <string name="dexcom_short">Dex</string>
+    <string name="description_source_dexcom">Ta emot BG-värden från \"Bygg din egen Dexcom-app\".</string>
+    <string name="glimp">Glimp</string>
+    <string name="description_source_glimp">Ta emot BG-data från Glimp</string>
+    <string name="mm640g">MM640g</string>
+    <string name="description_source_mm640g">Ta emot BG-data från 600SeriesAndroidUploader</string>
+    <string name="poctech">Poctech</string>
+    <string name="description_source_poctech">Ta emot BG-data från Poctechappen</string>
+    <string name="glunovo">Glunovo</string>
+    <string name="description_source_glunovo">Ta emot värden från Glunovo-appen</string>
+    <string name="intelligo">Intelligo</string>
+    <string name="description_source_intelligo">Ta emot värden från Intelligo-appen</string>
+    <string name="tomato">Tomato (MiaoMiao)</string>
+    <string name="tomato_short">Tomato</string>
+    <string name="description_source_tomato">Ta emot BG-data från tomato app (MiaoMiao-enhet)</string>
+    <string name="random_bg">Slumpmässig BG</string>
+    <string name="description_source_random_bg">Generera slumpmässiga BG-data (endast demo-läge)</string>
+    <string name="random_bg_short">BG</string>
+    <string name="direction">riktning</string>
+    <!-- Patched Syai Tag App -->
+    <!-- Patched SI App -->
+    <!-- Patched Sino App -->
+</resources>
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Source -->
+    <string name="ns_client_bg">NSClient KŞ</string>
+    <string name="ns_client_bg_short">NS KŞ</string>
+    <string name="description_source_ns_client">Nightscout\'tan KŞ verilerini yükler</string>
+    <string name="source_xdrip">xDrip+ KŞ</string>
+    <string name="dexcom_app_patched">BYODA</string>
+    <string name="dexcom_short">BYODA</string>
+    <string name="description_source_dexcom">\'Kendi Dexcom Uygulamanızı Oluşturun\' uygulamasından KŞ değerlerini alın.</string>
+    <string name="glimp">Glimp</string>
+    <string name="description_source_glimp">Glimp\'ten KŞ değerleri alır.</string>
+    <string name="mm640g">MM640g</string>
+    <string name="description_source_mm640g">600SeriesAndroidUploader\'dan KŞ değerleri alır.</string>
+    <string name="poctech">Poctech</string>
+    <string name="description_source_poctech">Poctech uygulamasından KŞ değerlerini alır</string>
+    <string name="glunovo">Glunovo</string>
+    <string name="description_source_glunovo">Glunovo uygulamasından değerler alır</string>
+    <string name="intelligo">Intelligo</string>
+    <string name="description_source_intelligo">Intelligo uygulamasından değerler alır</string>
+    <string name="tomato">Tomato (MiaoMiao)</string>
+    <string name="tomato_short">Tomato</string>
+    <string name="description_source_tomato">KŞ değerlerini Tomato uygulamasından (MiaoMiao Cihazından) al</string>
+    <string name="random_bg">Rastgele KŞ</string>
+    <string name="description_source_random_bg">Rastgele KŞ verileri oluşturun (Yalnızca demo modunda)</string>
+    <string name="random_bg_short">KŞ</string>
+    <string name="bgsource_settings">KŞ kaynağı ayarları</string>
+    <string name="bgsource_log_sensor_change_title">Sensörü başlat</string>
+    <string name="bgsource_log_sensor_change_summary">Sensör KŞ kaynağından yerel yayına başladığında Careportal\'da otomatik olarak \"CGM Sensör Ekleme\" etkinliği oluşur</string>
+    <string name="direction">yön</string>
+    <string name="bg_generation_interval_minutes">KŞ belirleme aralıkları (dk.)</string>
+    <!-- Patched Syai Tag App -->
+    <!-- Patched SI App -->
+    <!-- Patched Sino App -->
+</resources>
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Source -->
+    <!-- Patched Syai Tag App -->
+    <!-- Patched SI App -->
+    <!-- Patched Sino App -->
+</resources>
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Source -->
+    <string name="ns_client_bg">NSClient BG</string>
+    <string name="ns_client_bg_short">NS BG</string>
+    <string name="description_source_ns_client">Tải dữ liệu đường huyết (BG) từ Nightscout</string>
+    <string name="source_xdrip">xDrip+ BG</string>
+    <string name="description_source_xdrip">Nhận giá trị đường huyết (BG) từ xDrip+ và các ứng dụng tương thích (như Juggluco, v.v.).</string>
+    <string name="dexcom_app_patched">BYODA</string>
+    <string name="dexcom_short">BYODA</string>
+    <string name="description_source_dexcom">Nhận đường huyết từ ứng dụng \'Build Your Own Dexcom App\'.</string>
+    <string name="glimp">Glimp</string>
+    <string name="description_source_glimp">Nhận giá trị đường huyết từ Glimp.</string>
+    <string name="mm640g">MM640g</string>
+    <string name="description_source_mm640g">Nhận giá trị đường huyết (BG) từ 600SeriesAndroidUploader.</string>
+    <string name="poctech">Poctech</string>
+    <string name="description_source_poctech">Nhận đường huyết từ ứng dụng Poctech</string>
+    <string name="glunovo">Glunovo</string>
+    <string name="description_source_glunovo">Nhận gá trị từ ứng dụng Glunovo</string>
+    <string name="intelligo">Intelligo</string>
+    <string name="description_source_intelligo">Nhận giá trị từ ứng dụng Intelligo</string>
+    <string name="tomato">Tomato (MiaoMiao)</string>
+    <string name="tomato_short">Tomato</string>
+    <string name="description_source_tomato">Nhận giá trị đường huyết từ ứng dụng Tomato (thiết bị MiaoMiao)</string>
+    <string name="random_bg">Random BG</string>
+    <string name="description_source_random_bg">Tạo dữ liệu đường huyết ngẫu nhiên (chỉ dùng cho chế độ Demo)</string>
+    <string name="random_bg_short">Đường huyết</string>
+    <string name="bgsource_settings">Cài đặt nguồn dữ liệu đường huyết</string>
+    <string name="bgsource_log_sensor_change_title">Chấp nhận khởi động cảm biến</string>
+    <string name="bgsource_log_sensor_change_summary">Tự động tạo sự kiện “CGM Sensor Insert” trong Careportal khi nhận được tín hiệu khởi động cảm biến từ nguồn BG (local broadcast)</string>
+    <string name="direction">direction</string>
+    <string name="bg_generation_interval_minutes">Chu kỳ tạo đường huyết (phút)</string>
+    <!-- Patched Syai Tag App -->
+    <string name="syai_tag_app">Syai</string>
+    <string name="description_source_patched_syai_tag_app">Nhận dữ liệu đường huyết từ ứng dụng Syai/Ottai.</string>
+    <!-- Patched SI App -->
+    <string name="patched_si_app">Ứng dụng SI</string>
+    <string name="description_source_patched_si_app">Nhận dữ liệu đường huyết từ ứng dụng SI.</string>
+    <!-- Patched Sino App -->
+    <string name="patched_sino_app">Ứng dụng Sino</string>
+    <string name="description_source_patched_sino_app">Nhận dữ liệu đường huyết từ ứng dụng Sino.</string>
+</resources>
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Source -->
+    <string name="description_source_ns_client">从 Nightscout 下载 血糖数据</string>
+    <string name="dexcom_app_patched">BYODA德康补丁版(构建你自己的德康应用Build Your Own Dexcom App)</string>
+    <string name="dexcom_short">BYODA</string>
+    <string name="description_source_dexcom">从德康补丁版接收血糖数据(Build Your Own Dexcom App)。</string>
+    <string name="description_source_glimp">从 Glimp 接收血糖值。</string>
+    <string name="description_source_mm640g">从美敦力600Series 的AndroidUploader 接收血糖值。</string>
+    <string name="poctech">Poctech</string>
+    <string name="description_source_poctech">从 Poctech app 接收血糖值。</string>
+    <string name="glunovo">Glunovo</string>
+    <string name="description_source_glunovo">从Glunovo应用接收血糖数据。</string>
+    <string name="tomato">番茄（喵喵）</string>
+    <string name="tomato_short">番茄</string>
+    <string name="description_source_tomato">从番茄app(喵喵设备) 接收血糖值</string>
+    <!-- Patched Syai Tag App -->
+    <!-- Patched SI App -->
+    <!-- Patched Sino App -->
+</resources>
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Source -->
+    <string name="ns_client_bg">NSClient 血糖</string>
+    <string name="ns_client_bg_short">NS 血糖</string>
+    <string name="description_source_ns_client">從 Nightscout 下載血糖資料</string>
+    <string name="source_xdrip">xDrip+ 血糖</string>
+    <string name="description_source_xdrip">從 xDrip+ 及相容的應用程式（例如 Juggluco 等）接收血糖數值。</string>
+    <string name="dexcom_app_patched">BYODA</string>
+    <string name="dexcom_short">BYODA</string>
+    <string name="description_source_dexcom">接收來自「Build Your Own Dexcom App」的血糖值。</string>
+    <string name="glimp">Glimp</string>
+    <string name="description_source_glimp">接收來自 Glimp 的血糖值。</string>
+    <string name="mm640g">MM640g</string>
+    <string name="description_source_mm640g">接收來自 600SeriesAndroidUploader 的血糖值。</string>
+    <string name="poctech">Poctech</string>
+    <string name="description_source_poctech">接收來自 Poctech 應用的血糖值</string>
+    <string name="glunovo">Glunovo</string>
+    <string name="description_source_glunovo">接收來自 Glunovo 應用的資料</string>
+    <string name="intelligo">Intelligo</string>
+    <string name="description_source_intelligo">接收來自 Intelligo 應用的資料</string>
+    <string name="tomato">Tomato（MiaoMiao）</string>
+    <string name="tomato_short">Tomato</string>
+    <string name="description_source_tomato">接收來自 Tomato 應用（MiaoMiao 設備）的血糖值</string>
+    <string name="random_bg">隨機血糖值</string>
+    <string name="description_source_random_bg">生成隨機血糖資料（僅限演示模式）</string>
+    <string name="random_bg_short">血糖值</string>
+    <string name="bgsource_settings">血糖資料來源設定</string>
+    <string name="bgsource_log_sensor_change_title">接受傳感器啟動</string>
+    <string name="bgsource_log_sensor_change_summary">在收到來自血糖資料來源的本地廣播傳感器啟動時，自動在「照護入口」建立「CGM 傳感器植入」事件</string>
+    <string name="direction">方向</string>
+    <string name="bg_generation_interval_minutes">血糖生成間隔（分鐘）</string>
+    <!-- Patched Syai Tag App -->
+    <string name="syai_tag_app">Syai / 歐態</string>
+    <string name="description_source_patched_syai_tag_app">從 Syai / 與歐態應用程式接收血糖資料。</string>
+    <!-- Patched SI App -->
+    <string name="patched_si_app">SI App</string>
+    <string name="description_source_patched_si_app">從修改版 Sibionic SI App 接收血糖資料。</string>
+    <!-- Patched Sino App -->
+    <string name="patched_sino_app">Sino App</string>
+    <string name="description_source_patched_sino_app">從修改版 Sino App 接收血糖資料。</string>
 </resources>
