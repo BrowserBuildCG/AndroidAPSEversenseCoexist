@@ -149,19 +149,23 @@ class EversenseHttp365Util {
             return fresh.access_token
         }
 
+        /**
+         * Upload glucose readings to the Eversense DMS cloud.
+         * Returns true if the server accepted the upload (HTTP 2xx), false on any error.
+         */
         fun uploadGlucoseReadings(
             preferences: SharedPreferences,
             readings: List<EversenseCGMResult>,
             transmitterSerialNumber: String,
             firmwareVersion: String
-        ) {
-            if (readings.isEmpty()) return
+        ): Boolean {
+            if (readings.isEmpty()) return true
             val token = getOrRefreshToken(preferences) ?: run {
                 EversenseLogger.error(TAG, "Cannot upload glucose — no valid access token")
-                return
+                return false
             }
 
-            try {
+            return try {
                 val jsonArray = readings.joinToString(prefix = "[", postfix = "]") { r ->
                     """{"SensorId":"${r.sensorId}","TransmitterId":"$transmitterSerialNumber","Timestamp":"${dateFormatter.format(Date(r.datetime))}","CurrentGlucoseValue":${r.glucoseInMgDl},"CurrentGlucoseDateTime":"${dateFormatter.format(Date(r.datetime))}","FWVersion":"$firmwareVersion","EssentialLog":"0x${r.rawResponseHex}"}"""
                 }
@@ -183,11 +187,14 @@ class EversenseHttp365Util {
                 if (responseCode >= 400) {
                     val error = try { BufferedInputStream(conn.errorStream).readBytes().toString(Charsets.UTF_8) } catch (e: Exception) { "" }
                     EversenseLogger.error(TAG, "Glucose upload failed — status: $responseCode, body: $error")
+                    false
                 } else {
                     EversenseLogger.info(TAG, "Glucose upload success — status: $responseCode, readings: ${readings.size}")
+                    true
                 }
             } catch (e: Exception) {
                 EversenseLogger.error(TAG, "Glucose upload exception: $e")
+                false
             }
         }
 

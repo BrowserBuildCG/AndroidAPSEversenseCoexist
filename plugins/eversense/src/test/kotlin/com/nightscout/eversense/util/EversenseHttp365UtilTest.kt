@@ -7,6 +7,7 @@ import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Assertions.assertTrue
@@ -147,8 +148,9 @@ class EversenseHttp365UtilTest {
             )
         )
 
-        EversenseHttp365Util.uploadGlucoseReadings(prefs, readings, "TX-12345", "1.2.3")
+        val result = EversenseHttp365Util.uploadGlucoseReadings(prefs, readings, "TX-12345", "1.2.3")
 
+        assertTrue(result, "Expected upload to return true on HTTP 200")
         assertEquals(1, mockWebServer.requestCount)
         val request = mockWebServer.takeRequest()
         assertEquals("/api/v1.0/DiagnosticLog/PostEssentialLogs", request.path)
@@ -229,9 +231,10 @@ class EversenseHttp365UtilTest {
             EversenseCGMResult(120, System.currentTimeMillis(), EversenseTrendArrow.FLAT, "s1", "ff")
         )
 
-        // Should not throw — errors are logged internally
-        EversenseHttp365Util.uploadGlucoseReadings(prefs, readings, "TX1", "1.0")
+        // Should not throw — errors are logged internally, returns false
+        val result = EversenseHttp365Util.uploadGlucoseReadings(prefs, readings, "TX1", "1.0")
 
+        assertFalse(result, "Expected upload to return false on HTTP 400")
         assertEquals(1, mockWebServer.requestCount)
     }
 
@@ -247,8 +250,9 @@ class EversenseHttp365UtilTest {
             EversenseCGMResult(80, System.currentTimeMillis(), EversenseTrendArrow.FLAT, "s1", "01")
         )
 
-        EversenseHttp365Util.uploadGlucoseReadings(prefs, readings, "TX1", "1.0")
+        val result = EversenseHttp365Util.uploadGlucoseReadings(prefs, readings, "TX1", "1.0")
 
+        assertFalse(result, "Expected upload to return false on HTTP 500")
         assertEquals(1, mockWebServer.requestCount)
     }
 
