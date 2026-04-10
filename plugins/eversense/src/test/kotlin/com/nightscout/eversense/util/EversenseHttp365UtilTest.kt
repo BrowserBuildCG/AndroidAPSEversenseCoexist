@@ -181,12 +181,14 @@ class EversenseHttp365UtilTest {
 
         val body = mockWebServer.takeRequest().body.readUtf8()
 
-        assertTrue(body.startsWith("[") && body.endsWith("]"), "Body should be a JSON array")
+        assertTrue(body.startsWith("{\"essentialLogs\":["), "Body must be wrapped in {\"essentialLogs\":[...]}")
         assertTrue(body.contains("\"SensorId\":\"abc123\""), "Missing SensorId")
         assertTrue(body.contains("\"TransmitterId\":\"TXSERIAL\""), "Missing TransmitterId")
         assertTrue(body.contains("\"CurrentGlucoseValue\":95"), "Missing CurrentGlucoseValue")
         assertTrue(body.contains("\"FWVersion\":\"2.0.1\""), "Missing FWVersion")
-        assertTrue(body.contains("\"EssentialLog\":\"0xcafebabe\""), "EssentialLog must have 0x prefix")
+        // EssentialLog must be base64-encoded bytes, not a hex string
+        val expectedBase64 = java.util.Base64.getEncoder().encodeToString(byteArrayOf(0xca.toByte(), 0xfe.toByte(), 0xba.toByte(), 0xbe.toByte()))
+        assertTrue(body.contains("\"EssentialLog\":\"$expectedBase64\""), "EssentialLog must be base64 bytes, got: $body")
     }
 
     @Test
