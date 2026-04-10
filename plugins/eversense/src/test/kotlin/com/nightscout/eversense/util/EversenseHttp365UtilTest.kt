@@ -197,8 +197,8 @@ class EversenseHttp365UtilTest {
 
         val readings = listOf(
             EversenseCGMResult(100, 1700000000000L, EversenseTrendArrow.FLAT, "s1", "aa"),
-            EversenseCGMResult(110, 1700000300000L, EversenseTrendArrow.UP, "s1", "bb"),
-            EversenseCGMResult(105, 1700000600000L, EversenseTrendArrow.DOWN, "s1", "cc")
+            EversenseCGMResult(110, 1700000300000L, EversenseTrendArrow.SINGLE_UP, "s1", "bb"),
+            EversenseCGMResult(105, 1700000600000L, EversenseTrendArrow.SINGLE_DOWN, "s1", "cc")
         )
 
         EversenseHttp365Util.uploadGlucoseReadings(prefs, readings, "TX99", "3.0")
