@@ -193,12 +193,13 @@ class EversensePlugin @Inject constructor(
 
         }
 
-        // Credentials section
+        // Credentials section — E365 only
         val credentials = PreferenceCategory(context)
         parent.addPreference(credentials)
         credentials.apply {
             title = rh.gs(R.string.eversense_credentials_title)
             initialExpandedChildrenCount = 0
+            isVisible = eversense.is365()
 
             val username = EditTextPreference(context)
             username.key = "eversense_credentials_username"
@@ -452,12 +453,13 @@ class EversensePlugin @Inject constructor(
 
         }
 
-        // Notifications section
+        // Notifications section — E365 only
         val notifications = PreferenceCategory(context)
         parent.addPreference(notifications)
         notifications.apply {
             title = "Notifications"
             initialExpandedChildrenCount = 0
+            isVisible = eversense.is365()
 
             val cloudUploadToast = SwitchPreference(context)
             cloudUploadToast.key = "eversense_notif_cloud_upload_toast"
