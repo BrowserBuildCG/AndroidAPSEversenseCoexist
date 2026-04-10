@@ -2,6 +2,8 @@ package com.nightscout.eversense.util
 
 import android.annotation.SuppressLint
 import android.content.SharedPreferences
+import androidx.core.content.edit
+import com.nightscout.eversense.models.EversenseCGMResult
 import com.nightscout.eversense.models.EversenseSecureState
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
@@ -10,7 +12,10 @@ import java.io.ByteArrayOutputStream
 import java.io.OutputStreamWriter
 import java.net.HttpURLConnection
 import java.net.URL
+import java.text.SimpleDateFormat
 import java.util.Base64
+import java.util.Date
+import java.util.Locale
 
 class EversenseHttp365Util {
     companion object {
@@ -117,6 +122,68 @@ class EversenseHttp365Util {
             } catch (e: Exception) {
                 EversenseLogger.error(TAG, "Failed to get fleetSecretV2 - exception: $e")
                 return null
+            }
+        }
+
+        private val UPLOAD_BASE_URL = "https://usmobileappmsprod.eversensedms.com/"
+        private val dateFormatter = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.US)
+
+        fun getOrRefreshToken(preferences: SharedPreferences): String? {
+            val expiry = preferences.getLong(StorageKeys.ACCESS_TOKEN_EXPIRY, 0)
+            val cached = preferences.getString(StorageKeys.ACCESS_TOKEN, null)
+            // Use cached token if it has more than 5 minutes remaining
+            if (cached != null && System.currentTimeMillis() < expiry - 300_000L) {
+                return cached
+            }
+            // Re-login to get a fresh token
+            val fresh = login(preferences) ?: return null
+            val newExpiry = System.currentTimeMillis() + (fresh.expires_in * 1000L)
+            preferences.edit(commit = true) {
+                putString(StorageKeys.ACCESS_TOKEN, fresh.access_token)
+                putLong(StorageKeys.ACCESS_TOKEN_EXPIRY, newExpiry)
+            }
+            return fresh.access_token
+        }
+
+        fun uploadGlucoseReadings(
+            preferences: SharedPreferences,
+            readings: List<EversenseCGMResult>,
+            transmitterSerialNumber: String,
+            firmwareVersion: String
+        ) {
+            if (readings.isEmpty()) return
+            val token = getOrRefreshToken(preferences) ?: run {
+                EversenseLogger.error(TAG, "Cannot upload glucose — no valid access token")
+                return
+            }
+
+            try {
+                val jsonArray = readings.joinToString(prefix = "[", postfix = "]") { r ->
+                    """{"SensorId":"${r.sensorId}","TransmitterId":"$transmitterSerialNumber","Timestamp":"${dateFormatter.format(Date(r.datetime))}","CurrentGlucoseValue":${r.glucoseInMgDl},"CurrentGlucoseDateTime":"${dateFormatter.format(Date(r.datetime))}","FWVersion":"$firmwareVersion","EssentialLog":"0x${r.rawResponseHex}"}"""
+                }
+
+                val url = URL("${UPLOAD_BASE_URL}api/v1.0/DiagnosticLog/PostEssentialLogs")
+                val conn = url.openConnection() as HttpURLConnection
+                conn.requestMethod = "POST"
+                conn.setRequestProperty("Authorization", "Bearer $token")
+                conn.setRequestProperty("Content-Type", "application/json")
+                conn.doOutput = true
+
+                val writer = OutputStreamWriter(conn.outputStream, "UTF-8")
+                writer.write(jsonArray)
+                writer.flush()
+                writer.close()
+                conn.connect()
+
+                val responseCode = conn.responseCode
+                if (responseCode >= 400) {
+                    val error = try { BufferedInputStream(conn.errorStream).readBytes().toString(Charsets.UTF_8) } catch (e: Exception) { "" }
+                    EversenseLogger.error(TAG, "Glucose upload failed — status: $responseCode, body: $error")
+                } else {
+                    EversenseLogger.info(TAG, "Glucose upload success — status: $responseCode, readings: ${readings.size}")
+                }
+            } catch (e: Exception) {
+                EversenseLogger.error(TAG, "Glucose upload exception: $e")
             }
         }
 

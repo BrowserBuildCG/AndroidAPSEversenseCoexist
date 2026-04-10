@@ -46,11 +46,17 @@ class GetGlucoseDataPacket(private val sensorIdLen: Int) : EversenseBasePacket()
 
         EversenseLogger.info("GetGlucoseDataPacket", "Sensor signal strength raw: $signalRaw")
 
+        val sensorId = receivedData.copyOfRange(12, 12 + sensorIdLen)
+            .toByteArray().joinToString("") { "%02x".format(it) }
+        val rawHex = receivedData.toByteArray().joinToString("") { "%02x".format(it) }
+
         return Response(
             datetime = receivedData.copyOfRange(12 + sensorIdLen, 20 + sensorIdLen).toUnix(),
             glucoseInMgDl = receivedData.copyOfRange(20 + sensorIdLen, 22 + sensorIdLen).toInt(),
             trend = getTrend(receivedData[164 + sensorIdLen].toInt()),
-            signalStrength = signalRaw
+            signalStrength = signalRaw,
+            sensorId = sensorId,
+            rawResponseHex = rawHex
         )
     }
 
@@ -71,6 +77,8 @@ class GetGlucoseDataPacket(private val sensorIdLen: Int) : EversenseBasePacket()
         val datetime: Long,
         val glucoseInMgDl: Int,
         val trend: EversenseTrendArrow,
-        val signalStrength: Int
+        val signalStrength: Int,
+        val sensorId: String = "",
+        val rawResponseHex: String = ""
     ) : EversenseBasePacket.Response()
 }

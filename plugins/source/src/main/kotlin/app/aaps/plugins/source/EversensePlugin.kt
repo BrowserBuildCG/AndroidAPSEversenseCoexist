@@ -652,7 +652,8 @@ class EversensePlugin @Inject constructor(
         }
 
         ioScope.launch {
-            val insertionDate = eversense.getCurrentState()?.insertionDate?.takeIf { it > 0 }
+            val state = eversense.getCurrentState()
+            val insertionDate = state?.insertionDate?.takeIf { it > 0 }
             val result = persistenceLayer.insertCgmSourceData(
                 Sources.Eversense,
                 glucoseValues,
@@ -660,6 +661,17 @@ class EversensePlugin @Inject constructor(
                 insertionDate
             ).blockingGet()
             aapsLogger.info(LTag.BGSOURCE, "CGM insert complete — inserted: ${result.inserted}, updated: ${result.updated}")
+
+            // Upload E365 readings to Eversense cloud so official app sees data without needing BLE
+            if (type == EversenseType.EVERSENSE_365 && state != null) {
+                val prefs = context.getSharedPreferences("EversenseCGMManager", android.content.Context.MODE_PRIVATE)
+                com.nightscout.eversense.util.EversenseHttp365Util.uploadGlucoseReadings(
+                    preferences = prefs,
+                    readings = readings,
+                    transmitterSerialNumber = state.transmitterSerialNumber,
+                    firmwareVersion = state.firmwareVersion
+                )
+            }
         }
     }
 

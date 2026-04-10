@@ -516,6 +516,11 @@ class EversenseGattCallback(
                     return
                 }
 
+                // Cache access token so it can be used for cloud uploads without re-login
+                val expiryMs = System.currentTimeMillis() + (authSession.expires_in * 1000L)
+                preferences.edit().putString(StorageKeys.ACCESS_TOKEN, authSession.access_token)
+                    .putLong(StorageKeys.ACCESS_TOKEN_EXPIRY, expiryMs).apply()
+
                 val fleet = networkExecutor.submit<Any?> {
                     EversenseHttp365Util.getFleetSecretV2(
                         accessToken = authSession.access_token,
