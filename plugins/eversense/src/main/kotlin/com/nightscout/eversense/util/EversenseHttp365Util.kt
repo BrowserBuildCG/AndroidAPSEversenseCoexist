@@ -166,14 +166,13 @@ class EversenseHttp365Util {
             }
 
             return try {
-                val jsonArray = readings.joinToString(prefix = "[", postfix = "]") { r ->
-                    // EssentialLog must be base64-encoded bytes (System.Byte[] in .NET JSON)
+                // EssentialLog must be base64-encoded bytes (System.Byte[] in .NET JSON serialization)
+                // Body must be a bare JSON array — server deserializes directly to List<GlucoseEssentialLogsVM>
+                val jsonBody = readings.joinToString(prefix = "[", postfix = "]") { r ->
                     val rawBytes = r.rawResponseHex.chunked(2).map { it.toInt(16).toByte() }.toByteArray()
                     val essentialLogBase64 = Base64.getEncoder().encodeToString(rawBytes)
                     """{"SensorId":"${r.sensorId}","TransmitterId":"$transmitterSerialNumber","Timestamp":"${dateFormatter.format(Date(r.datetime))}","CurrentGlucoseValue":${r.glucoseInMgDl},"CurrentGlucoseDateTime":"${dateFormatter.format(Date(r.datetime))}","FWVersion":"$firmwareVersion","EssentialLog":"$essentialLogBase64"}"""
                 }
-                // Server expects {"essentialLogs": [...]} wrapper, not a bare array
-                val jsonBody = """{"essentialLogs":$jsonArray}"""
 
                 val url = URL("${uploadBaseUrl}api/v1.0/DiagnosticLog/PostEssentialLogs")
                 val conn = url.openConnection() as HttpURLConnection

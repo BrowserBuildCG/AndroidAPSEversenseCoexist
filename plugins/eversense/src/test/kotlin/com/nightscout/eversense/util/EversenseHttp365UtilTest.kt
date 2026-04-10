@@ -181,7 +181,7 @@ class EversenseHttp365UtilTest {
 
         val body = mockWebServer.takeRequest().body.readUtf8()
 
-        assertTrue(body.startsWith("{\"essentialLogs\":["), "Body must be wrapped in {\"essentialLogs\":[...]}")
+        assertTrue(body.startsWith("[") && body.endsWith("]"), "Body must be a bare JSON array")
         assertTrue(body.contains("\"SensorId\":\"abc123\""), "Missing SensorId")
         assertTrue(body.contains("\"TransmitterId\":\"TXSERIAL\""), "Missing TransmitterId")
         assertTrue(body.contains("\"CurrentGlucoseValue\":95"), "Missing CurrentGlucoseValue")
