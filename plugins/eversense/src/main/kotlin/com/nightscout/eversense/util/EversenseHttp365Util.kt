@@ -27,6 +27,10 @@ class EversenseHttp365Util {
         private val CLIENT_NO = 2
         private val CLIENT_TYPE = 128
 
+        // Overridable for unit tests
+        internal var tokenBaseUrl = "https://usiamapi.eversensedms.com/"
+        internal var uploadBaseUrl = "https://usmobileappmsprod.eversensedms.com/"
+
         fun login(preference: SharedPreferences): LoginResponseModel? {
             val state = getState(preference)
             try {
@@ -38,7 +42,7 @@ class EversenseHttp365Util {
                     "password=${state.password}"
                 ).joinToString("&")
 
-                val url = URL("https://usiamapi.eversensedms.com/connect/token")
+                val url = URL("${tokenBaseUrl}connect/token")
                 val conn = url.openConnection() as HttpURLConnection
                 conn.requestMethod = "POST"
                 conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded")
@@ -125,7 +129,6 @@ class EversenseHttp365Util {
             }
         }
 
-        private val UPLOAD_BASE_URL = "https://usmobileappmsprod.eversensedms.com/"
         private val dateFormatter = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.US)
 
         fun getOrRefreshToken(preferences: SharedPreferences): String? {
@@ -162,7 +165,7 @@ class EversenseHttp365Util {
                     """{"SensorId":"${r.sensorId}","TransmitterId":"$transmitterSerialNumber","Timestamp":"${dateFormatter.format(Date(r.datetime))}","CurrentGlucoseValue":${r.glucoseInMgDl},"CurrentGlucoseDateTime":"${dateFormatter.format(Date(r.datetime))}","FWVersion":"$firmwareVersion","EssentialLog":"0x${r.rawResponseHex}"}"""
                 }
 
-                val url = URL("${UPLOAD_BASE_URL}api/v1.0/DiagnosticLog/PostEssentialLogs")
+                val url = URL("${uploadBaseUrl}api/v1.0/DiagnosticLog/PostEssentialLogs")
                 val conn = url.openConnection() as HttpURLConnection
                 conn.requestMethod = "POST"
                 conn.setRequestProperty("Authorization", "Bearer $token")

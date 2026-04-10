@@ -21,6 +21,8 @@ dependencies {
 
     implementation("org.bouncycastle:bcpkix-jdk18on:1.81")
     implementation("org.bouncycastle:bcprov-jdk18on:1.81")
+
+    testImplementation("com.squareup.okhttp3:mockwebserver:4.12.0")
 }
 
 
