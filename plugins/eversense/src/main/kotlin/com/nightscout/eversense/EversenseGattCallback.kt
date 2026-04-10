@@ -83,15 +83,6 @@ class EversenseGattCallback(
     private var failedConnectionAttempts: Int = 0
     private val PLACEMENT_WARNING_THRESHOLD = 3
 
-    // When true, AAPS disconnects after each sync to give the official Eversense app
-    // a 2-minute window to connect and upload data to the cloud. Reconnects automatically.
-    @Volatile
-    var coexistenceMode: Boolean = false
-
-    // True during a planned coexistence disconnect — suppresses normal auto-reconnect
-    @Volatile
-    private var plannedDisconnect: Boolean = false
-
     fun isConnected(): Boolean = connected
     fun is365(): Boolean = security == EversenseSecurityType.SecureV2
 
@@ -176,7 +167,7 @@ class EversenseGattCallback(
             }
 
             val storedAddress = preferences.getString(StorageKeys.REMOTE_DEVICE_KEY, null)
-            if (storedAddress != null && !plannedDisconnect) {
+            if (storedAddress != null) {
                 val delayMs = if (status == BluetoothGatt.GATT_SUCCESS) 5000L else 10000L
                 EversenseLogger.info(TAG, "Scheduling auto-reconnect in ${delayMs/1000}s (status: $status)")
                 handler.postDelayed({
@@ -184,7 +175,7 @@ class EversenseGattCallback(
                     plugin.connect(null)
                 }, delayMs)
             } else {
-                if (!plannedDisconnect) { EversenseLogger.warning(TAG, "No stored device address — skipping auto-reconnect") } else { EversenseLogger.info(TAG, "Planned coexistence disconnect — suppressing auto-reconnect") }
+                EversenseLogger.warning(TAG, "No stored device address — skipping auto-reconnect")
             }
         }
     }
@@ -321,16 +312,6 @@ class EversenseGattCallback(
             bleExecutor.submit {
                 EversenseE3Communicator.readGlucose(this, preferences, plugin.watchers)
                 EversenseE3Communicator.fullSync(this, preferences, plugin.watchers)
-                    if (coexistenceMode) {
-                        EversenseLogger.info(TAG, "Coexistence — disconnecting to give official app 2-minute window")
-                        plannedDisconnect = true
-                        disconnect()
-                        handler.postDelayed({
-                            EversenseLogger.info(TAG, "Coexistence reconnect — official app window ended")
-                            plannedDisconnect = false
-                            plugin.connect(null)
-                        }, 120000L)
-                    }
             }
             return
         }
@@ -347,16 +328,6 @@ class EversenseGattCallback(
                 if (response.glucoseDatetime > fourHalfMinAgo) {
                     Eversense365Communicator.readGlucose(this, preferences, plugin.watchers)
                     Eversense365Communicator.fullSync(this, preferences, plugin.watchers)
-                }
-                if (coexistenceMode && !plannedDisconnect) {
-                    EversenseLogger.info(TAG, "Coexistence — disconnecting to give official app 2-minute window")
-                    plannedDisconnect = true
-                    disconnect()
-                    handler.postDelayed({
-                        EversenseLogger.info(TAG, "Coexistence reconnect — official app window ended")
-                        plannedDisconnect = false
-                        plugin.connect(null)
-                    }, 120000L)
                 }
             }
             return

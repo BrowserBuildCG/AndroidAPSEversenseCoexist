@@ -189,18 +189,6 @@ class EversensePlugin @Inject constructor(
             }
             category.addPreference(eselSmoothing)
 
-            val coexistence = SwitchPreference(context)
-            coexistence.key = "eversense_coexistence_mode"
-            coexistence.title = rh.gs(R.string.eversense_coexistence_mode)
-            coexistence.summary = rh.gs(R.string.eversense_coexistence_summary)
-            coexistence.isChecked = false
-            coexistence.onPreferenceChangeListener = Preference.OnPreferenceChangeListener { _, newValue ->
-                val enabled = newValue as Boolean
-                eversense.setCoexistenceMode(enabled)
-                aapsLogger.info(LTag.BGSOURCE, "Coexistence mode set to: $enabled")
-                true
-            }
-            category.addPreference(coexistence)
         }
 
         // Credentials section
@@ -302,6 +290,8 @@ class EversensePlugin @Inject constructor(
         calibration.apply {
             title = rh.gs(R.string.eversense_calibration_title)
             initialExpandedChildrenCount = 0
+            // Calibration is not supported on E3 transmitters
+            isEnabled = eversense.is365()
 
             val currentPhase = Preference(context)
             currentPhase.key = "eversense_calibration_phase"
@@ -569,9 +559,9 @@ class EversensePlugin @Inject constructor(
             ))
         }
 
-        // Calibration due notification — fires once at noon per nextCalibrationDate, dismissed by user, never shown again for that date
+        // Calibration due notification — E365 only, fires once at noon per nextCalibrationDate
         val isAfterNoonCal = java.util.Calendar.getInstance().get(java.util.Calendar.HOUR_OF_DAY) >= 12
-        if (isAfterNoonCal && state.nextCalibrationDate > 0 && System.currentTimeMillis() >= state.nextCalibrationDate
+        if (eversense.is365() && isAfterNoonCal && state.nextCalibrationDate > 0 && System.currentTimeMillis() >= state.nextCalibrationDate
             && !isCalibrationDueDismissed(state.nextCalibrationDate)) {
             rxBus.send(EventNewNotification(
                 Notification(103, "Eversense calibration is due — open AAPS to calibrate your sensor.", Notification.NORMAL)
