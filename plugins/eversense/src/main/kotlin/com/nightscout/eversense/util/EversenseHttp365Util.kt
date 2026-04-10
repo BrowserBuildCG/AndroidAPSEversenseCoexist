@@ -45,6 +45,7 @@ class EversenseHttp365Util {
                 val url = URL("${tokenBaseUrl}connect/token")
                 val conn = url.openConnection() as HttpURLConnection
                 conn.requestMethod = "POST"
+                conn.doOutput = true
                 conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded")
 
                 val stream = conn.outputStream
