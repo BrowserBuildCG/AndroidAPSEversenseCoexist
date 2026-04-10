@@ -83,6 +83,8 @@ class EversensePlugin @Inject constructor(
         context.getSharedPreferences("EversenseCGMManager", Context.MODE_PRIVATE)
     }
 
+    private fun cloudUploadToastEnabled() = securePrefs.getBoolean("eversense_notif_cloud_upload_toast", true)
+
     private var connectedPreference: Preference? = null
     private var batteryPreference: Preference? = null
     private var placementSignalPreference: Preference? = null
@@ -114,7 +116,6 @@ class EversensePlugin @Inject constructor(
 
     init {
         eversense.setContext(context, true)
-        eversense.addWatcher(this)
     }
 
     override fun advancedFilteringSupported(): Boolean = true
@@ -138,6 +139,7 @@ class EversensePlugin @Inject constructor(
 
     override fun onStop() {
         super.onStop()
+        eversense.removeWatcher(this)
     }
 
     private fun requestBluetoothPermissions() {
@@ -448,25 +450,25 @@ class EversensePlugin @Inject constructor(
             addPreference(lastSync)
             lastSyncPreference = lastSync
 
-            if (false) {
+        }
 
-            val releaseForApp = Preference(context)
-            releaseForApp.key = "eversense_release_for_official_app"
-            releaseForApp.title = rh.gs(R.string.eversense_release_for_official_app)
-            releaseForApp.summary = rh.gs(R.string.eversense_release_summary)
-            releaseForApp.onPreferenceClickListener = Preference.OnPreferenceClickListener {
-                if (releaseForOfficialApp) return@OnPreferenceClickListener false
-                aapsLogger.info(LTag.BGSOURCE, "User releasing transmitter for official app")
-                releaseForOfficialApp = true
-                eversense.disconnect()
-                releaseForApp.summary = rh.gs(R.string.eversense_release_active)
-                rxBus.send(EventNewNotification(Notification(97, "Eversense transmitter released — open the official Eversense app now. AAPS will reconnect automatically every 5 minutes.", Notification.INFO)))
-                mainHandler.postDelayed({ startOfficialAppReleaseReconnectLoop() }, 300000L)
+        // Notifications section
+        val notifications = PreferenceCategory(context)
+        parent.addPreference(notifications)
+        notifications.apply {
+            title = "Notifications"
+            initialExpandedChildrenCount = 0
+
+            val cloudUploadToast = SwitchPreference(context)
+            cloudUploadToast.key = "eversense_notif_cloud_upload_toast"
+            cloudUploadToast.title = "Show cloud upload result"
+            cloudUploadToast.summary = "Display a toast after each BG upload to the Eversense cloud"
+            cloudUploadToast.isChecked = securePrefs.getBoolean("eversense_notif_cloud_upload_toast", true)
+            cloudUploadToast.onPreferenceChangeListener = Preference.OnPreferenceChangeListener { _, v ->
+                securePrefs.edit(commit = true) { putBoolean("eversense_notif_cloud_upload_toast", v as Boolean) }
                 true
             }
-            addPreference(releaseForApp)
-            releasePreference = releaseForApp
-            }
+            addPreference(cloudUploadToast)
         }
     }
 
@@ -575,7 +577,8 @@ class EversensePlugin @Inject constructor(
 
         // Calibration due notification — E365 only, fires once at noon per nextCalibrationDate
         val isAfterNoonCal = java.util.Calendar.getInstance().get(java.util.Calendar.HOUR_OF_DAY) >= 12
-        if (eversense.is365() && isAfterNoonCal && state.nextCalibrationDate > 0 && System.currentTimeMillis() >= state.nextCalibrationDate
+        if (eversense.is365() && isAfterNoonCal && state.nextCalibrationDate > 0
+            && System.currentTimeMillis() >= state.nextCalibrationDate
             && !isCalibrationDueDismissed(state.nextCalibrationDate)) {
             rxBus.send(EventNewNotification(
                 Notification(103, "Eversense calibration is due — open AAPS to calibrate your sensor.", Notification.NORMAL)
@@ -680,8 +683,10 @@ class EversensePlugin @Inject constructor(
                 else
                     "Eversense cloud upload: ❌ failed — check credentials and internet"
                 aapsLogger.info(LTag.BGSOURCE, msg)
-                mainHandler.post {
-                    android.widget.Toast.makeText(context, msg, android.widget.Toast.LENGTH_LONG).show()
+                if (cloudUploadToastEnabled()) {
+                    mainHandler.post {
+                        android.widget.Toast.makeText(context, msg, android.widget.Toast.LENGTH_LONG).show()
+                    }
                 }
             }
         }
