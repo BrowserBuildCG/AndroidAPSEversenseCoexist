@@ -83,6 +83,7 @@ class EversensePlugin @Inject constructor(
         context.getSharedPreferences("EversenseCGMManager", Context.MODE_PRIVATE)
     }
 
+    private fun cloudUploadEnabled()      = securePrefs.getBoolean("eversense_cloud_upload_enabled", true)
     private fun cloudUploadToastEnabled() = securePrefs.getBoolean("eversense_notif_cloud_upload_toast", true)
 
     private var connectedPreference: Preference? = null
@@ -201,6 +202,17 @@ class EversensePlugin @Inject constructor(
             initialExpandedChildrenCount = 0
             isVisible = eversense.is365()
 
+            val uploadEnabled = SwitchPreference(context)
+            uploadEnabled.key = "eversense_cloud_upload_enabled"
+            uploadEnabled.title = "Enable Eversense Data Upload"
+            uploadEnabled.summary = "Automatically upload BG readings to the Eversense cloud"
+            uploadEnabled.isChecked = securePrefs.getBoolean("eversense_cloud_upload_enabled", true)
+            uploadEnabled.onPreferenceChangeListener = Preference.OnPreferenceChangeListener { _, v ->
+                securePrefs.edit(commit = true) { putBoolean("eversense_cloud_upload_enabled", v as Boolean) }
+                true
+            }
+            addPreference(uploadEnabled)
+
             val username = EditTextPreference(context)
             username.key = "eversense_credentials_username"
             username.title = rh.gs(R.string.eversense_credentials_username)
@@ -286,19 +298,6 @@ class EversensePlugin @Inject constructor(
             }
             addPreference(signOut)
 
-            // Test Cloud Upload button
-            val testUpload = Preference(context)
-            testUpload.key = "eversense_credentials_test_upload"
-            testUpload.title = "Test Cloud Upload"
-            testUpload.summary = "Verify login and BG upload to Eversense cloud"
-            testUpload.onPreferenceClickListener = Preference.OnPreferenceClickListener {
-                testUpload.summary = "Testing…"
-                ioScope.launch {
-                    runCloudUploadTest(preferenceManager.context, testUpload)
-                }
-                true
-            }
-            addPreference(testUpload)
         }
 
         // Calibration section
@@ -672,7 +671,7 @@ class EversensePlugin @Inject constructor(
             aapsLogger.info(LTag.BGSOURCE, "CGM insert complete — inserted: ${result.inserted}, updated: ${result.updated}")
 
             // Upload E365 readings to Eversense cloud so official app sees data without needing BLE
-            if (type == EversenseType.EVERSENSE_365 && state != null) {
+            if (type == EversenseType.EVERSENSE_365 && state != null && cloudUploadEnabled()) {
                 val prefs = context.getSharedPreferences("EversenseCGMManager", android.content.Context.MODE_PRIVATE)
                 val uploadOk = com.nightscout.eversense.util.EversenseHttp365Util.uploadGlucoseReadings(
                     preferences = prefs,
@@ -690,83 +689,6 @@ class EversensePlugin @Inject constructor(
                         android.widget.Toast.makeText(context, msg, android.widget.Toast.LENGTH_LONG).show()
                     }
                 }
-            }
-        }
-    }
-
-    private fun runCloudUploadTest(activityContext: Context, resultPref: Preference) {
-        val prefs = context.getSharedPreferences("EversenseCGMManager", Context.MODE_PRIVATE)
-        val secureState = getSecureState()
-
-        // 1. Credentials check
-        if (secureState.username.isEmpty() || secureState.password.isEmpty()) {
-            mainHandler.post {
-                resultPref.summary = "❌ No credentials saved — enter username and password first"
-                android.widget.Toast.makeText(activityContext, "Eversense cloud test: no credentials saved", android.widget.Toast.LENGTH_LONG).show()
-            }
-            return
-        }
-
-        // 2. Force a fresh login (bypass cache) to verify credentials work right now
-        aapsLogger.info(LTag.BGSOURCE, "Cloud upload test — forcing fresh login")
-        val loginResult = com.nightscout.eversense.util.EversenseHttp365Util.login(prefs)
-        if (loginResult == null) {
-            mainHandler.post {
-                resultPref.summary = "❌ Login failed — check username/password and internet connection"
-                android.widget.Toast.makeText(activityContext, "Eversense cloud test: login failed", android.widget.Toast.LENGTH_LONG).show()
-            }
-            return
-        }
-        aapsLogger.info(LTag.BGSOURCE, "Cloud upload test — login OK, token type: ${loginResult.token_type}")
-
-        // 3. Build a test reading using the current state if available, otherwise use safe placeholder values
-        val state = eversense.getCurrentState()
-        val sensorId = state?.sensorId?.takeIf { it.isNotEmpty() } ?: "TEST_SENSOR"
-        val transmitterSerial = state?.transmitterSerialNumber?.takeIf { it.isNotEmpty() } ?: "TEST_TX"
-        val firmwareVersion = state?.firmwareVersion?.takeIf { it.isNotEmpty() } ?: "0.0.0"
-
-        val testReading = com.nightscout.eversense.models.EversenseCGMResult(
-            glucoseInMgDl = 100,
-            datetime = System.currentTimeMillis(),
-            trend = com.nightscout.eversense.enums.EversenseTrendArrow.FLAT,
-            sensorId = sensorId,
-            rawResponseHex = "000000000000000000000000000000000000000000000000"  // 24-byte zeroed placeholder
-        )
-
-        // 4. Upload using the freshly obtained token
-        var uploadSuccess = false
-        var uploadError = ""
-        try {
-            // Temporarily cache the fresh token so uploadGlucoseReadings uses it
-            val expiryMs = System.currentTimeMillis() + (loginResult.expires_in * 1000L)
-            prefs.edit().putString(com.nightscout.eversense.util.StorageKeys.ACCESS_TOKEN, loginResult.access_token)
-                .putLong(com.nightscout.eversense.util.StorageKeys.ACCESS_TOKEN_EXPIRY, expiryMs)
-                .commit()
-
-            com.nightscout.eversense.util.EversenseHttp365Util.uploadGlucoseReadings(
-                preferences = prefs,
-                readings = listOf(testReading),
-                transmitterSerialNumber = transmitterSerial,
-                firmwareVersion = firmwareVersion
-            )
-            uploadSuccess = true
-        } catch (e: Exception) {
-            uploadError = e.message ?: e.toString()
-            aapsLogger.error(LTag.BGSOURCE, "Cloud upload test exception: $e")
-        }
-
-        // 5. Report result
-        mainHandler.post {
-            if (uploadSuccess) {
-                val msg = "✅ Cloud upload OK — login + upload succeeded (sensor: $sensorId, tx: $transmitterSerial)"
-                resultPref.summary = msg
-                android.widget.Toast.makeText(activityContext, "Eversense cloud test: PASSED", android.widget.Toast.LENGTH_LONG).show()
-                aapsLogger.info(LTag.BGSOURCE, "Cloud upload test PASSED — $msg")
-            } else {
-                val msg = "❌ Upload failed — login OK but upload error: $uploadError"
-                resultPref.summary = msg
-                android.widget.Toast.makeText(activityContext, "Eversense cloud test: upload failed", android.widget.Toast.LENGTH_LONG).show()
-                aapsLogger.error(LTag.BGSOURCE, "Cloud upload test FAILED — $msg")
             }
         }
     }
