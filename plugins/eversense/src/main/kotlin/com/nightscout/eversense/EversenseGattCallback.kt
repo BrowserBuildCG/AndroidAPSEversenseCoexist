@@ -78,10 +78,17 @@ class EversenseGattCallback(
     @Volatile
     private var connected: Boolean = false
 
-    // Tracks consecutive failed connection attempts to detect transmitter placement issues
+    // Tracks consecutive status-19 failures to detect transmitter placement issues
     @Volatile
     private var failedConnectionAttempts: Int = 0
     private val PLACEMENT_WARNING_THRESHOLD = 3
+
+    // Tracks consecutive general reconnect attempts (reset on successful connection).
+    // Used to compute exponential backoff so AAPS retries quickly after boot (when the
+    // official Eversense app temporarily holds the BLE connection) and backs off for
+    // sustained failures to avoid draining the battery.
+    @Volatile
+    private var reconnectAttempts: Int = 0
 
     fun isConnected(): Boolean = connected
     fun is365(): Boolean = security == EversenseSecurityType.SecureV2
@@ -127,6 +134,9 @@ class EversenseGattCallback(
             bluetoothGatt = gatt
             // FIX 3: Set connected flag on confirmed STATE_CONNECTED.
             connected = true
+            // Reset backoff counters on successful connection
+            reconnectAttempts = 0
+            failedConnectionAttempts = 0
 
             preferences.edit(commit = true) {
                 putString(StorageKeys.REMOTE_DEVICE_KEY, gatt.device.address)
@@ -168,10 +178,28 @@ class EversenseGattCallback(
 
             val storedAddress = preferences.getString(StorageKeys.REMOTE_DEVICE_KEY, null)
             if (storedAddress != null) {
-                val delayMs = if (status == BluetoothGatt.GATT_SUCCESS) 5000L else 10000L
-                EversenseLogger.info(TAG, "Scheduling auto-reconnect in ${delayMs/1000}s (status: $status)")
+                // Exponential backoff so AAPS reclaims the transmitter quickly after boot
+                // (when the official Eversense app temporarily holds the BLE connection)
+                // and avoids battery drain during sustained unavailability.
+                //
+                // Status 19 = transmitter actively rejected us (placement issue, not competition) —
+                // use a fixed 30 s interval so we don't spam it.
+                // Status GATT_SUCCESS = clean disconnect (we or the transmitter closed cleanly) —
+                // reconnect quickly in 5 s.
+                // All other status codes (e.g. 133 = GATT_ERROR, device busy) = backoff:
+                //   attempt 0 → 5 s, attempt 1 → 10 s, attempt 2 → 20 s, attempt 3 → 40 s,
+                //   attempt 4+ → 60 s cap.
+                val delayMs: Long = when {
+                    status == 19 -> 30_000L
+                    status == BluetoothGatt.GATT_SUCCESS -> 5_000L
+                    else -> {
+                        val attempt = reconnectAttempts++
+                        minOf(5_000L * (1L shl minOf(attempt, 4)), 60_000L)
+                    }
+                }
+                EversenseLogger.info(TAG, "Scheduling auto-reconnect in ${delayMs / 1000}s (status: $status, attempt: $reconnectAttempts)")
                 handler.postDelayed({
-                    EversenseLogger.info(TAG, "Attempting auto-reconnect...")
+                    EversenseLogger.info(TAG, "Attempting auto-reconnect (attempt $reconnectAttempts)...")
                     plugin.connect(null)
                 }, delayMs)
             } else {
