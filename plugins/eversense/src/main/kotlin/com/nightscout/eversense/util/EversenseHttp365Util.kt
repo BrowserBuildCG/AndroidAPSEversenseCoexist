@@ -130,7 +130,9 @@ class EversenseHttp365Util {
             }
         }
 
-        private val dateFormatter = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.US)
+        private val dateFormatter = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.US).apply {
+            timeZone = java.util.TimeZone.getTimeZone("UTC")
+        }
 
         fun getOrRefreshToken(preferences: SharedPreferences): String? {
             val expiry = preferences.getLong(StorageKeys.ACCESS_TOKEN_EXPIRY, 0)
@@ -166,12 +168,24 @@ class EversenseHttp365Util {
             }
 
             return try {
+                // Only upload readings that have raw BLE data — backfill history entries have no
+                // rawResponseHex and cannot produce a valid EssentialLog for the server.
+                val uploadable = readings.filter { it.rawResponseHex.isNotEmpty() }
+                if (uploadable.isEmpty()) {
+                    EversenseLogger.info(TAG, "No readings with raw BLE data to upload — skipping")
+                    return true
+                }
+
+                EversenseLogger.info(TAG, "Uploading ${uploadable.size} reading(s) — TransmitterId='$transmitterSerialNumber'")
+
                 // EssentialLog must be base64-encoded bytes (System.Byte[] in .NET JSON serialization)
                 // Body must be a bare JSON array — server deserializes directly to List<GlucoseEssentialLogsVM>
-                val jsonBody = readings.joinToString(prefix = "[", postfix = "]") { r ->
+                val jsonBody = uploadable.joinToString(prefix = "[", postfix = "]") { r ->
                     val rawBytes = r.rawResponseHex.chunked(2).map { it.toInt(16).toByte() }.toByteArray()
                     val essentialLogBase64 = Base64.getEncoder().encodeToString(rawBytes)
-                    """{"SensorId":"${r.sensorId}","TransmitterId":"$transmitterSerialNumber","Timestamp":"${dateFormatter.format(Date(r.datetime))}","CurrentGlucoseValue":${r.glucoseInMgDl},"CurrentGlucoseDateTime":"${dateFormatter.format(Date(r.datetime))}","FWVersion":"$firmwareVersion","EssentialLog":"$essentialLogBase64"}"""
+                    val ts = dateFormatter.format(Date(r.datetime)) + "Z"
+                    EversenseLogger.info(TAG, "  Reading: sensorId='${r.sensorId}' glucose=${r.glucoseInMgDl} ts=$ts rawBytes=${rawBytes.size}")
+                    """{"SensorId":"${r.sensorId}","TransmitterId":"$transmitterSerialNumber","Timestamp":"$ts","CurrentGlucoseValue":${r.glucoseInMgDl},"CurrentGlucoseDateTime":"$ts","FWVersion":"$firmwareVersion","EssentialLog":"$essentialLogBase64"}"""
                 }
 
                 val url = URL("${uploadBaseUrl}api/v1.0/DiagnosticLog/PostEssentialLogs")
