@@ -37,6 +37,7 @@ import com.nightscout.eversense.EversenseCGMPlugin
 import com.nightscout.eversense.callbacks.EversenseScanCallback
 import com.nightscout.eversense.callbacks.EversenseWatcher
 import com.nightscout.eversense.enums.CalibrationReadiness
+import com.nightscout.eversense.enums.EversenseAlarm
 import com.nightscout.eversense.enums.EversenseType
 import com.nightscout.eversense.models.EversenseCGMResult
 import com.nightscout.eversense.models.EversenseScanResult
@@ -633,6 +634,19 @@ class EversensePlugin @Inject constructor(
 
     override fun onAlarmReceived(alarm: ActiveAlarm) {
         aapsLogger.info(LTag.BGSOURCE, "Eversense alarm received: ${alarm.code.title}")
+        // CRITICAL_FAULT (code 0) is sent for both hardware faults and calibration-overdue events.
+        // If the stored next calibration date has already passed, treat it as a calibration alarm.
+        val title = if (alarm.code == EversenseAlarm.CRITICAL_FAULT) {
+            val stateJson = securePrefs.getString(StorageKeys.STATE, null)
+            val state = stateJson?.let { json.decodeFromString<EversenseState>(it) }
+            if (state != null && state.nextCalibrationDate > 0 && state.nextCalibrationDate < System.currentTimeMillis()) {
+                "Eversense Calibration Due Now"
+            } else {
+                alarm.code.title
+            }
+        } else {
+            alarm.code.title
+        }
         val level = when {
             alarm.code.isCritical -> Notification.URGENT
             alarm.code.isWarning  -> Notification.NORMAL
@@ -640,7 +654,7 @@ class EversensePlugin @Inject constructor(
         }
         val notificationId = 95 + (alarm.codeRaw % 50)
         mainHandler.post {
-            rxBus.send(EventNewNotification(Notification(notificationId, alarm.code.title, level, 60)))
+            rxBus.send(EventNewNotification(Notification(notificationId, title, level, 60)))
         }
     }
 
