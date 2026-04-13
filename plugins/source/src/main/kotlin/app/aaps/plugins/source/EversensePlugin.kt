@@ -676,7 +676,7 @@ class EversensePlugin @Inject constructor(
                 val uploadOk = com.nightscout.eversense.util.EversenseHttp365Util.uploadGlucoseReadings(
                     preferences = prefs,
                     readings = readings,
-                    transmitterSerialNumber = state.transmitterSerialNumber,
+                    transmitterSerialNumber = state.transmitterName.ifEmpty { state.transmitterSerialNumber },
                     firmwareVersion = state.firmwareVersion
                 )
                 val msg = if (uploadOk)
